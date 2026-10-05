@@ -17,6 +17,7 @@ To test on a phone, connect it to the same Wi-Fi network and open `http://COMPUT
 ## Calculator
 
 - Add multiple research goals from either tree using the searchable selector.
+- The selector opens with focus on Close so the search field does not automatically summon a mobile keyboard. Adding an item keeps the selector open and marks it Selected; filters and list position are retained. Close or Escape returns to the calculator.
 - Enter current and desired levels. Costs include ranks above the current level through the desired level.
 - Expand each research's requirements to enter partial progress or check Achieved. Unchecking restores the previous recorded level; without a prior checkbox action, it sets the level to zero.
 - Current levels are shared across goals. Shared prerequisites count once, at the highest level needed. Any completed rank proves the research was unlocked, so its earlier unlock prerequisites are not charged again.

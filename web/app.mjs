@@ -59,9 +59,14 @@ function addGoal(id) {
   if (!item || state.goals.some(goal => goal.id === id)) return;
   const current = state.levels[id] || 0;
   commit({...state, goals:[...state.goals, {id, level:Math.min(item.maxLevel, current + 1)}]});
-  byId('picker-dialog').close();
-  switchTab('calculator');
-  document.querySelector(`[data-focus="current-${id}"]`)?.focus();
+  // Update the existing button so the dialog keeps its scroll position and filters.
+  const button = byId('picker-results').querySelector(`[data-add="${id}"]`);
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Selected';
+    button.setAttribute('aria-label', `Already selected ${item.name}`);
+  }
+  byId('picker-count').textContent = `${item.name} added · ${state.goals.length} research selected`;
   announce(`${item.name} added to the calculator.`);
 }
 function costTable(plan, resources) {
@@ -202,7 +207,7 @@ function bind() {
   };
   byId('adjustments').addEventListener('input',editAdjustment);
   byId('adjustments').addEventListener('change',editAdjustment);
-  byId('open-picker').addEventListener('click',()=>{byId('picker-search').value='';renderPicker();byId('picker-dialog').showModal();byId('picker-search').focus();});
+  byId('open-picker').addEventListener('click',()=>{byId('picker-search').value='';renderPicker();byId('picker-dialog').showModal();});
   byId('picker-tree').addEventListener('change',renderPicker);
   byId('picker-search').addEventListener('input',renderPicker);
   for(const id of ['stats-tree','stats-scope','stats-search'])byId(id).addEventListener('input',()=>{statsLimit=60;renderStats();});
