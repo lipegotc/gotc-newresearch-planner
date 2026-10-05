@@ -19,6 +19,7 @@ To test on a phone, connect it to the same Wi-Fi network and open `http://COMPUT
 - Add multiple research goals from either tree using the searchable selector.
 - The selector opens with focus on Close so the search field does not automatically summon a mobile keyboard. Adding an item keeps the selector open and changes its button to Unselect; filters and list position are retained. Unselect removes the goal while retaining recorded progress. Research still required by another goal remains included in its requirements and costs. Close or Escape returns to the calculator.
 - Enter current and desired levels. Costs include ranks above the current level through the desired level.
+- Research level fields visibly cap entered values at that research's maximum (currently 15). The Maester field caps at 40. Oversized typed or pasted values are corrected immediately and saved within the allowed range.
 - Expand each research's requirements to enter partial progress or check Achieved. Unchecking restores the previous recorded level; without a prior checkbox action, it sets the level to zero.
 - Current levels are shared across goals. Shared prerequisites count once, at the highest level needed. Any completed rank proves the research was unlocked, so its earlier unlock prerequisites are not charged again.
 - Removing a goal keeps its completed level saved.

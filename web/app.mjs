@@ -22,6 +22,12 @@ function commit(next, preserveEditing = false) {
   renderCalculator(preserveEditing);
 }
 function announce(message) { byId('app-message').textContent = message; }
+function readLevelInput(input, min, max) {
+  const level = boundedNumber(input.value, min, max, true);
+  // Normalize the visible field before preserving its node during recalculation.
+  if (input.value === '' || Number(input.value) !== level) input.value = String(level);
+  return level;
+}
 // Keep the exact input node while typing, so decimals, focus, and mobile keyboards survive updates.
 function renderHTML(element, html, preserveEditing) {
   const active = document.activeElement;
@@ -190,13 +196,13 @@ function bind() {
     const input=event.target;
     if(input.type==='checkbox' && event.type==='input')return;
     if(event.type==='input' && input.type==='number' && input.value==='')return;
-    if(input.dataset.current){const id=input.dataset.current;commit(setCompletedLevel(state,id,boundedNumber(input.value,0,byResearch.get(id).maxLevel,true)),event.type==='input');}
-    else if(input.dataset.desired){const id=input.dataset.desired;commit({...state,goals:state.goals.map(goal=>goal.id===id ? {...goal,level:boundedNumber(input.value,1,byResearch.get(id).maxLevel,true)} : goal)},event.type==='input');}
+    if(input.dataset.current){const id=input.dataset.current;commit(setCompletedLevel(state,id,readLevelInput(input,0,byResearch.get(id).maxLevel)),event.type==='input');}
+    else if(input.dataset.desired){const id=input.dataset.desired;const level=readLevelInput(input,1,byResearch.get(id).maxLevel);commit({...state,goals:state.goals.map(goal=>goal.id===id ? {...goal,level} : goal)},event.type==='input');}
     else if(input.dataset.achieved){commit(toggleRequirement(state,input.dataset.achieved,Number(input.dataset.required),input.checked));}
   };
   byId('goal-list').addEventListener('input',editGoal);
   byId('goal-list').addEventListener('change',editGoal);
-  const editMaester=event=>{if(event.type==='input' && event.target.value==='')return;commit({...state,maester:boundedNumber(event.target.value,1,40,true)},event.type==='input');};
+  const editMaester=event=>{if(event.type==='input' && event.target.value==='')return;commit({...state,maester:readLevelInput(event.target,1,40)},event.type==='input');};
   const editShared=event=>{if(event.type==='input' && event.target.value==='')return;commit({...state,sharedEfficiency:boundedNumber(event.target.value)},event.type==='input');};
   for(const type of ['input','change']){
     byId('maester-level').addEventListener(type,editMaester);
