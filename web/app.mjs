@@ -54,20 +54,23 @@ function renderTabs() {
   }
   for (const view of document.querySelectorAll('.view')) view.hidden = view.id !== `${state.tab}-view`;
 }
-function addGoal(id) {
+function togglePickerGoal(id) {
   const item = byResearch.get(id);
-  if (!item || state.goals.some(goal => goal.id === id)) return;
+  if (!item) return;
+  const selected = state.goals.some(goal => goal.id === id);
   const current = state.levels[id] || 0;
-  commit({...state, goals:[...state.goals, {id, level:Math.min(item.maxLevel, current + 1)}]});
+  const goals = selected
+    ? state.goals.filter(goal => goal.id !== id)
+    : [...state.goals, {id, level:Math.min(item.maxLevel, current + 1)}];
+  commit({...state, goals});
   // Update the existing button so the dialog keeps its scroll position and filters.
-  const button = byId('picker-results').querySelector(`[data-add="${id}"]`);
+  const button = byId('picker-results').querySelector(`[data-toggle-goal="${id}"]`);
   if (button) {
-    button.disabled = true;
-    button.textContent = 'Selected';
-    button.setAttribute('aria-label', `Already selected ${item.name}`);
+    button.textContent = selected ? 'Add' : 'Unselect';
+    button.setAttribute('aria-label', `${selected ? 'Add' : 'Unselect'} ${item.name}`);
   }
-  byId('picker-count').textContent = `${item.name} added · ${state.goals.length} research selected`;
-  announce(`${item.name} added to the calculator.`);
+  byId('picker-count').textContent = `${item.name} ${selected ? 'unselected' : 'added'} · ${state.goals.length} research selected`;
+  announce(selected ? `${item.name} unselected. Its progress is still saved.` : `${item.name} added to the calculator.`);
 }
 function costTable(plan, resources) {
   const costs = calculateCosts(plan, resources, state.efficiencies, state.reductions, state.sharedEfficiency);
@@ -144,7 +147,7 @@ function renderPicker() {
   byId('picker-count').textContent = `${matches.length} result${matches.length===1 ? '' : 's'} found`;
   byId('picker-results').innerHTML = matches.map(item => {
     const added = state.goals.some(goal=>goal.id===item.id);
-    return `<div class="picker-item"><div><strong>${escapeHTML(item.name)}</strong><p>${escapeHTML(item.properties.map(prop=>prop.name).join(' · '))} · Current level ${state.levels[item.id] || 0}</p></div><button class="button primary" data-add="${item.id}" ${added ? 'disabled' : ''} aria-label="${added ? 'Already selected' : 'Add'} ${escapeHTML(item.name)}">${added ? 'Selected' : 'Add'}</button></div>`;
+    return `<div class="picker-item"><div><strong>${escapeHTML(item.name)}</strong><p>${escapeHTML(item.properties.map(prop=>prop.name).join(' · '))} · Current level ${state.levels[item.id] || 0}</p></div><button class="button primary" data-toggle-goal="${item.id}" aria-label="${added ? 'Unselect' : 'Add'} ${escapeHTML(item.name)}">${added ? 'Unselect' : 'Add'}</button></div>`;
   }).join('') || '<p class="empty">No matching research.</p>';
 }
 function renderStats() {
@@ -178,8 +181,8 @@ function bind() {
   document.addEventListener('click', event=>{
     const tab=event.target.closest('[data-tab]');
     if(tab){switchTab(tab.dataset.tab);return;}
-    const add=event.target.closest('[data-add]');
-    if(add){addGoal(add.dataset.add);return;}
+    const pickerGoal=event.target.closest('[data-toggle-goal]');
+    if(pickerGoal){togglePickerGoal(pickerGoal.dataset.toggleGoal);return;}
     const remove=event.target.closest('[data-remove]');
     if(remove){const name=byResearch.get(remove.dataset.remove).name;commit({...state,goals:state.goals.filter(goal=>goal.id!==remove.dataset.remove)});byId('open-picker').focus({preventScroll:true});announce(`${name} removed. Its progress is still saved.`);}
   });
