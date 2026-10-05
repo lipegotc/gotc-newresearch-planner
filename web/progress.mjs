@@ -8,6 +8,14 @@ export function boundedNumber(value, min = 0, max = Number.MAX_SAFE_INTEGER, int
   return Math.max(min, Math.min(max, integer ? Math.trunc(finite) : finite));
 }
 
+// Accept either decimal separator, while rejecting mixed separators and non-numbers.
+export function parseBoostInput(value) {
+  const text = String(value).trim();
+  if (!/^(?:\d+(?:[.,]\d*)?|[.,]\d+)$/.test(text)) return null;
+  const number = Number(text.replace(',', '.'));
+  return Number.isFinite(number) ? number : null;
+}
+
 const record = value => value && typeof value === "object" && !Array.isArray(value) ? value : {};
 
 // Normalize storage and imported backups at the boundary; never trust imported IDs or values.

@@ -27,6 +27,7 @@ To test on a phone, connect it to the same Wi-Fi network and open `http://COMPUT
 - The combined Maester requirement is the maximum building level for unfinished research ranks. Each selected research also shows the building level for its desired rank. Building upgrade costs are not included.
 - Original and reduced resource/material costs appear together. Expand individual or combined breakdowns to trace costs. Combined stat gains include unfinished prerequisites, counted once.
 - Cost adjustments are above the totals on mobile, and beside the calculation on desktop. Material adjustments expand separately. All boost inputs are available regardless of the selected tree.
+- Boosts accept either decimal separator, for example `24.22` or `24,22`, including `.5` or `,5`. Partial input and cursor position are retained while typing. Values save as numbers; leaving the field normalizes its display. Reductions remain capped at 100%.
 - Help explains the workflow. Stat gains retains the full level 0–15 property data and troop filters.
 
 Reduced cost = original cost × (1 − reduction / 100) ÷ (1 + total efficiency / 100).

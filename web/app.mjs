@@ -1,5 +1,5 @@
 import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateCosts, formatNumber, formatStat, valueAt } from './model.mjs';
-import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, boundedNumber, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs';
+import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=decimal-input-1';
 
 const byId = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -108,15 +108,17 @@ function goalCard(goal, combinedById, resources) {
   return `<article class="goal" aria-label="${escapeHTML(item.name)}"><div class="goal-row"><div class="goal-name"><small>${escapeHTML(item.tree)}</small><strong>${escapeHTML(item.name)}</strong></div><label><span class="field-label">Current level</span><input type="number" min="0" max="${item.maxLevel}" step="1" inputmode="numeric" value="${current}" data-current="${item.id}" data-focus="current-${item.id}" aria-label="Current level for ${escapeHTML(item.name)}"></label><label><span class="field-label">Desired level</span><input type="number" min="1" max="${item.maxLevel}" step="1" inputmode="numeric" value="${goal.level}" data-desired="${item.id}" data-focus="desired-${item.id}" aria-label="Desired level for ${escapeHTML(item.name)}"></label><div class="goal-stat"><span class="field-label">Stat gain</span>${gains}</div><div class="goal-maester"><span class="field-label">Maester</span>${item.maester[goal.level-1]}</div><button class="button remove" data-remove="${item.id}" aria-label="Remove ${escapeHTML(item.name)}">Remove</button></div>${current >= goal.level ? '<p class="requirement-note good">Desired level already achieved.</p>' : ''}${extra}${requiredList(goal, combinedById)}<details class="disclosure" data-disclosure="costs-${goal.id}"><summary>Research cost breakdown</summary><div class="details-content"><p class="muted">Selected research and its unmet prerequisites. Shared costs also shown here are counted only once in combined totals.</p>${costTable(ownPlan, resources)}</div></details></article>`;
 }
 function renderAdjustments(preserveEditing) {
-  const row = resource => `<tr><th scope="row">${escapeHTML(resource)}</th><td><input type="number" min="0" step="0.01" inputmode="decimal" value="${state.efficiencies[resource] || 0}" data-efficiency="${escapeHTML(resource)}" data-focus="efficiency-${escapeHTML(resource)}" aria-label="${escapeHTML(resource)} efficiency percent"></td><td><input type="number" min="0" max="100" step="0.01" inputmode="decimal" value="${state.reductions[resource] || 0}" data-reduction="${escapeHTML(resource)}" data-focus="reduction-${escapeHTML(resource)}" aria-label="${escapeHTML(resource)} reduction percent"></td></tr>`;
+  const row = resource => `<tr><th scope="row">${escapeHTML(resource)}</th><td><input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${state.efficiencies[resource] || 0}" data-efficiency="${escapeHTML(resource)}" data-focus="efficiency-${escapeHTML(resource)}" aria-label="${escapeHTML(resource)} efficiency percent" aria-describedby="boost-format-help"></td><td><input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${state.reductions[resource] || 0}" data-reduction="${escapeHTML(resource)}" data-focus="reduction-${escapeHTML(resource)}" aria-label="${escapeHTML(resource)} reduction percent" aria-describedby="boost-format-help"></td></tr>`;
   renderHTML(byId('resource-adjustments'), BASE_RESOURCES.map(row).join(''), preserveEditing);
   // Keep every material editable even when a selection changes trees.
   renderHTML(byId('material-adjustments-body'), data.resources.filter(resource => !BASE_RESOURCES.includes(resource)).map(row).join(''), preserveEditing);
-  byId('shared-efficiency').value = state.sharedEfficiency;
+  if (!preserveEditing || document.activeElement !== byId('shared-efficiency')) byId('shared-efficiency').value = state.sharedEfficiency;
 }
 function renderCalculator(preserveEditing = false) {
   const activeInput = document.activeElement;
-  const editingValue = preserveEditing && activeInput?.type === 'number' ? activeInput.value : null;
+  const editingValue = preserveEditing && activeInput?.matches('input[type="number"], input[inputmode="decimal"]') ? activeInput.value : null;
+  const selection = preserveEditing && activeInput?.type === 'text'
+    ? {start:activeInput.selectionStart, end:activeInput.selectionEnd, direction:activeInput.selectionDirection} : null;
   const focusKey = document.activeElement?.dataset.focus;
   const openDetails = new Map([...byId('goal-list').querySelectorAll('[data-disclosure]')].map(element => [element.dataset.disclosure, element.open]));
   const plan = buildMultiPlan(data.research, state.goals, state.levels);
@@ -145,6 +147,7 @@ function renderCalculator(preserveEditing = false) {
   const replacement = focusKey ? [...document.querySelectorAll('[data-focus]')].find(element => element.dataset.focus === focusKey) : activeInput;
   if (editingValue !== null && replacement?.isConnected) replacement.value = editingValue;
   if (focusKey) replacement?.focus({preventScroll:true});
+  if (selection && replacement?.isConnected) replacement.setSelectionRange(selection.start, selection.end, selection.direction);
 }
 function renderPicker() {
   const tree = byId('picker-tree').value;
@@ -203,16 +206,31 @@ function bind() {
   byId('goal-list').addEventListener('input',editGoal);
   byId('goal-list').addEventListener('change',editGoal);
   const editMaester=event=>{if(event.type==='input' && event.target.value==='')return;commit({...state,maester:readLevelInput(event.target,1,40)},event.type==='input');};
-  const editShared=event=>{if(event.type==='input' && event.target.value==='')return;commit({...state,sharedEfficiency:boundedNumber(event.target.value)},event.type==='input');};
   for(const type of ['input','change']){
     byId('maester-level').addEventListener(type,editMaester);
-    byId('shared-efficiency').addEventListener(type,editShared);
   }
   const editAdjustment=event=>{
     const input=event.target;
-    if(event.type==='input' && input.value==='')return;
-    if(input.dataset.efficiency)commit({...state,efficiencies:{...state.efficiencies,[input.dataset.efficiency]:boundedNumber(input.value)}},event.type==='input');
-    if(input.dataset.reduction)commit({...state,reductions:{...state.reductions,[input.dataset.reduction]:boundedNumber(input.value,0,100)}},event.type==='input');
+    const shared = input.id === 'shared-efficiency';
+    const field = input.dataset.efficiency ? 'efficiencies' : input.dataset.reduction ? 'reductions' : null;
+    if (!shared && !field) return;
+    const resource = input.dataset.efficiency || input.dataset.reduction;
+    const saved = shared ? state.sharedEfficiency : state[field][resource] || 0;
+    const parsed = parseBoostInput(input.value);
+    if (parsed === null) {
+      // Keep empty or partial decimals editable without changing the stored value.
+      if (event.type === 'input') {
+        if (/^[.,]?$/.test(input.value.trim())) input.removeAttribute('aria-invalid');
+        else input.setAttribute('aria-invalid', 'true');
+        return;
+      }
+      input.value = input.value.trim() === '' ? '0' : String(saved);
+    }
+    input.removeAttribute('aria-invalid');
+    const value = boundedNumber(parsed ?? (input.value === '0' ? 0 : saved), 0, field === 'reductions' ? 100 : Number.MAX_SAFE_INTEGER);
+    if (event.type === 'change' || value !== parsed) input.value = String(value);
+    if (value === saved) return;
+    commit(shared ? {...state, sharedEfficiency:value} : {...state, [field]:{...state[field], [resource]:value}}, true);
   };
   byId('adjustments').addEventListener('input',editAdjustment);
   byId('adjustments').addEventListener('change',editAdjustment);

@@ -21,7 +21,7 @@
           <section class="panel building-panel" aria-label="Building requirement"><label for="maester-level">Your Maester level</label><input id="maester-level" type="number" min="1" max="40" step="1" inputmode="numeric"><span aria-hidden="true">→</span><div id="maester-output"></div></section>
           <details id="adjustments" class="panel adjustments-panel" open>
             <summary><span>Cost adjustments</span><span class="summary-hint">Edit boosts</span></summary>
-            <div class="details-content"><p class="muted">Enter percentages, such as 72 for 72%.</p><label class="shared-input" for="shared-efficiency">Research Resource Efficiency %<input id="shared-efficiency" type="number" min="0" step="0.01" inputmode="decimal"></label>
+            <div class="details-content"><p id="boost-format-help" class="muted">Enter percentages, such as 72 for 72%. Decimals accept a dot or comma: 72.5 or 72,5.</p><label class="shared-input" for="shared-efficiency">Research Resource Efficiency %<input id="shared-efficiency" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" aria-describedby="boost-format-help"></label>
               <table class="adjustment-table"><thead><tr><th scope="col">Resource</th><th scope="col">Efficiency %</th><th scope="col">Reduction %</th></tr></thead><tbody id="resource-adjustments"></tbody></table>
               <details class="disclosure" id="material-adjustments"><summary>Material adjustments</summary><div class="details-content"><table class="adjustment-table"><thead><tr><th scope="col">Material</th><th scope="col">Efficiency %</th><th scope="col">Reduction %</th></tr></thead><tbody id="material-adjustments-body"></tbody></table></div></details>
               <p class="formula-note">Reduced = original × (1 − reduction %) ÷ (1 + total efficiency %). Research Resource Efficiency adds to Food, Wood, Stone, and Iron only.</p>
@@ -57,6 +57,6 @@
     <p>Your recorded research levels and Maester level will be kept.</p>
     <form method="dialog" class="dialog-actions"><button class="button" value="cancel" autofocus>Cancel</button><button class="button reset-button" value="confirm">Reset calculator</button></form>
   </dialog>
-  <p class="sr-only" role="status" id="app-message"></p><script type="module" src="./app.mjs"></script>
+  <p class="sr-only" role="status" id="app-message"></p><script type="module" src="./app.mjs?v=decimal-input-1"></script>
 </body>
 </html>

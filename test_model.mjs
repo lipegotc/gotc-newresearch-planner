@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { buildPlan, buildMultiPlan, calculateCosts, valueAt } from "./web/model.mjs";
-import { normalizeProgress, toggleRequirement, setCompletedLevel, resetCalculation } from "./web/progress.mjs";
+import { normalizeProgress, toggleRequirement, setCompletedLevel, resetCalculation, parseBoostInput } from "./web/progress.mjs";
 
 const data = JSON.parse(readFileSync(new URL("./web/data/research.json", import.meta.url), "utf8"));
 assert.equal(data.research.length, 83);
@@ -108,5 +108,12 @@ assert.equal(invalid.levels.bad, undefined);
 assert.equal(invalid.reductions.Food, 100);
 assert.equal(invalid.efficiencies.Food, 0);
 assert.equal(invalid.maester, 40);
+
+for (const [text, expected] of [["24.22",24.22],["24,22",24.22],[".5",0.5],[",5",0.5],["72.",72],["72,",72],["0.005",0.005],[" 12,5 ",12.5]]) {
+  assert.equal(parseBoostInput(text), expected);
+}
+for (const text of ["", ".", ",", "12,3.4", "12..5", "abc", "Infinity", "1e3", "-5"]) assert.equal(parseBoostInput(text), null);
+const decimalCosts = calculateCosts(firstPlan, ["Food"], {Food:parseBoostInput("12,5")}, {Food:parseBoostInput("24.22")}, parseBoostInput("60,5"));
+assert.equal(decimalCosts[0].reduced, first.costs.Food[0] * (1 - 24.22 / 100) / (1 + (12.5 + 60.5) / 100));
 
 console.log("Data integrity, calculator, requirement, and saved-progress checks passed for all 83 researches.");
