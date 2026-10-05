@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#111923">
+  <meta name="description" content="Calculate Military III and Dragon Combat research costs, stat gains, and requirements.">
+  <title>GoT: Conquest - Military 3 | Dragon Combat Research Planner</title><link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="app-shell">
+    <header class="site-header"><strong class="brand">GoT: Conquest - Military 3 | Dragon Combat Research Planner</strong><div class="header-actions"><span id="save-status" role="status">Saved on this device</span><button id="backup-button" class="button">Backup</button></div></header>
+    <nav class="primary-nav" aria-label="Main navigation"><button data-tab="calculator" class="nav-button active" aria-current="page">Calculator</button><button data-tab="help" class="nav-button">Help</button><button data-tab="stats" class="nav-button">Stat gains</button></nav>
+    <main id="main">
+      <section id="calculator-view" class="view" aria-labelledby="calculator-heading">
+        <div class="page-head"><div class="page-title-row"><h1 id="calculator-heading">Calculator</h1><button id="reset-button" class="button reset-button">Reset</button></div><p>Selected research and unmet requirements are included in the costs.</p></div>
+        <div class="calculator-grid">
+          <section class="panel research-panel" aria-labelledby="selected-heading">
+            <div class="panel-heading"><h2 id="selected-heading">Selected research</h2><button id="open-picker" class="button primary">+ Add research</button></div>
+            <div class="research-columns" aria-hidden="true"><span>Tree / research</span><span>Current level</span><span>Desired level</span><span>Stat gain</span><span>Maester</span><span></span></div><div id="goal-list"></div>
+          </section>
+          <section class="panel building-panel" aria-label="Building requirement"><label for="maester-level">Your Maester level</label><input id="maester-level" type="number" min="1" max="40" step="1" inputmode="numeric"><span aria-hidden="true">→</span><div id="maester-output"></div></section>
+          <details id="adjustments" class="panel adjustments-panel" open>
+            <summary><span>Cost adjustments</span><span class="summary-hint">Edit boosts</span></summary>
+            <div class="details-content"><p class="muted">Enter percentages, such as 72 for 72%.</p><label class="shared-input" for="shared-efficiency">Research Resource Efficiency %<input id="shared-efficiency" type="number" min="0" step="0.01" inputmode="decimal"></label>
+              <table class="adjustment-table"><thead><tr><th scope="col">Resource</th><th scope="col">Efficiency %</th><th scope="col">Reduction %</th></tr></thead><tbody id="resource-adjustments"></tbody></table>
+              <details class="disclosure" id="material-adjustments"><summary>Material adjustments</summary><div class="details-content"><table class="adjustment-table"><thead><tr><th scope="col">Material</th><th scope="col">Efficiency %</th><th scope="col">Reduction %</th></tr></thead><tbody id="material-adjustments-body"></tbody></table></div></details>
+              <p class="formula-note">Reduced = original × (1 − reduction %) ÷ (1 + total efficiency %). Research Resource Efficiency adds to Food, Wood, Stone, and Iron only.</p>
+            </div>
+          </details>
+          <section class="panel costs-panel" aria-labelledby="costs-heading"><div class="panel-heading"><h2 id="costs-heading">Original &amp; reduced costs</h2></div><p class="muted" id="plan-summary"></p>
+            <table class="cost-table"><thead><tr><th scope="col">Resource / material</th><th scope="col" class="number">Original</th><th scope="col" class="number">Reduced</th></tr></thead><tbody id="cost-body"></tbody></table><p class="formula-note">Values are rounded for display; calculations use full precision.</p>
+            <details class="disclosure" id="combined-breakdown"><summary>Combined research cost breakdown</summary><div class="details-content" id="combined-costs"></div></details>
+            <details class="disclosure" id="combined-gains"><summary>Combined stat gains, including requirements</summary><div class="details-content" id="gain-list"></div></details>
+          </section>
+        </div>
+      </section>
+      <section id="help-view" class="view" hidden aria-labelledby="help-heading"><div class="page-head"><h1 id="help-heading">How to use the calculator</h1></div><div class="help-content">
+        <section class="panel"><h2>1. Select research</h2><p>Choose <strong>Add research</strong>, pick Military III or Dragon Combat, and search by research name or stat. Add as many goals as you need, including goals from both trees.</p><p>Set <strong>Current level</strong> to your completed level, from 0–15, and <strong>Desired level</strong> to your target, from 1–15. Current level 5 and desired level 8 includes the costs of levels 6, 7, and 8. Remove a goal with its Remove button; its recorded progress stays saved.</p></section>
+        <section class="panel"><h2>2. Review requirements</h2><p>Open <strong>Requirements</strong> beneath any selected research. Unmet prerequisites are included automatically. Enter a partial current level or check <strong>Achieved</strong> to record the required level. Uncheck to restore the level recorded before checking; if there is no previous checkbox action, unchecking sets the level to 0. You can always enter the exact current level directly.</p><p>Research progress is shared across all goals. A requirement needed by multiple goals is counted once, at the highest level needed. A completed rank proves a research has already been unlocked, so its earlier unlock prerequisites are not added again. If your selected research already has a current level above 0, its initial unlock requirements are satisfied.</p><p>When a prerequisite is also a selected goal, edit its desired level on that goal. The combined total uses whichever required level is higher. The requirements list shows that higher level so its checkbox matches the combined plan.</p></section>
+        <section class="panel"><h2>3. Check your Maester level</h2><p>Enter your current <strong>Maester building level</strong>, from 1–40. Each research shows the building level for its desired rank. The summary shows the highest building level needed for unfinished research and prerequisites. Building upgrade costs are not included.</p></section>
+        <section class="panel"><h2>4. Enter boosts and compare costs</h2><p>Open <strong>Cost adjustments · Edit boosts</strong>. Enter your Research Resource Efficiency and each resource's efficiency/reduction percentages. Open <strong>Material adjustments</strong> for research materials. Food, Wood, Stone, and Iron add Research Resource Efficiency to their specific efficiency.</p><p class="formula-note">Reduced cost = original cost × (1 − reduction / 100) ÷ (1 + total efficiency / 100).</p><p>For example, a 20% reduction and 60% total efficiency change an original cost of 1,000 to 500. The totals include the selected research and any unmet requirements. Expand the per-research or combined breakdown to see where the costs come from. Research time is excluded.</p></section>
+        <section class="panel"><h2>5. Read stat gains</h2><p>Each selected row shows gains from its current level to its desired level. The combined stat gain list includes any extra levels required by the whole plan, counting each research level once. <strong>Stat gains</strong> lists cumulative values and gains from the previous level for levels 0–15. Infantry, Cavalry, and Ranged filters also include shared troop stats.</p></section>
+        <section class="panel"><h2>6. Save and transfer progress</h2><p>Your goals, completed levels, requirement confirmations, Maester level, and boosts save automatically in this browser. Reopening the same site in the same browser profile restores them. There are no accounts or automatic synchronization between devices.</p><p>Use <strong>Backup → Export progress</strong> to keep a copy or <strong>Import progress</strong> to restore it on another device. Import replaces your current profile. Clearing browser site data or using private browsing may remove progress. Older planner backups are supported.</p></section>
+      </div></section>
+      <section id="stats-view" class="view" hidden aria-labelledby="stats-heading"><div class="page-head"><h1 id="stats-heading">Full stat gains</h1><p>Cumulative values and gains from the previous level, for levels 0–15.</p></div>
+        <div class="filter-bar"><label>Tree<select id="stats-tree"><option value="all">Both trees</option><option>Military III</option><option>Dragon Combat</option></select></label><label>Troop scope<select id="stats-scope"><option value="all">All scopes</option><option>Infantry</option><option>Cavalry</option><option>Ranged</option><option>Shared</option></select></label><label>Research or stat<input id="stats-search" type="search" placeholder="Search…"></label></div>
+        <div class="panel"><div class="table-scroll"><table><thead><tr><th scope="col">Tree</th><th scope="col">Research</th><th scope="col">Stat</th><th scope="col">Scope</th><th scope="col">Level</th><th scope="col" class="number">Cumulative</th><th scope="col" class="number">Level gain</th><th scope="col">Maester</th></tr></thead><tbody id="stats-body"></tbody></table></div><div class="table-footer"><span id="stats-count"></span><button id="stats-more" class="button">Show more</button></div></div>
+      </section>
+    </main>
+    <footer class="site-footer"><span>Fan-made research planning tool. Not affiliated with WB Games.</span><span>Game of Thrones: Conquest and related names are used for identification. Trademarks and copyrights belong to their respective owners. All rights reserved.</span></footer>
+  </div>
+  <dialog id="picker-dialog" aria-labelledby="picker-heading"><form method="dialog" class="dialog-heading"><h2 id="picker-heading">Add research</h2><button class="button" aria-label="Close research selector">Close</button></form><div class="filter-bar picker-filters"><label>Tree<select id="picker-tree"><option>Military III</option><option>Dragon Combat</option></select></label><label>Research or stat<input id="picker-search" type="search" placeholder="Search research…"></label></div><p id="picker-count" class="muted" role="status"></p><div id="picker-results" class="picker-results"></div></dialog>
+  <dialog id="backup-dialog" aria-labelledby="backup-heading"><form method="dialog" class="dialog-heading"><h2 id="backup-heading">Back up your progress</h2><button class="button" aria-label="Close backup">Close</button></form><p>Export a copy of this browser's progress. Import a saved file to replace the current profile or transfer it to another device.</p><div class="dialog-actions"><button id="export-button" class="button primary">Export progress</button><button id="import-button" class="button">Import progress</button><input id="import-file" type="file" accept=".json,application/json" hidden></div><p id="backup-message" role="status"></p></dialog>
+  <dialog id="reset-dialog" aria-labelledby="reset-heading" aria-describedby="reset-description">
+    <h2 id="reset-heading">Reset calculator?</h2>
+    <p id="reset-description">This will remove all selected research and set every efficiency and reduction boost to zero, including Research Resource Efficiency and material boosts.</p>
+    <p>Your recorded research levels and Maester level will be kept.</p>
+    <form method="dialog" class="dialog-actions"><button class="button" value="cancel" autofocus>Cancel</button><button class="button reset-button" value="confirm">Reset calculator</button></form>
+  </dialog>
+  <p class="sr-only" role="status" id="app-message"></p><script type="module" src="./app.mjs"></script>
+</body>
+</html>

@@ -1,0 +1,731 @@
+{
+  "version": 1,
+  "tree": "Dragon Combat",
+  "stats": {
+    "-3416572878383616946": [
+      {
+        "name": "Dragon Troop Attack",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.032,
+          0.068,
+          0.108,
+          0.152,
+          0.203,
+          0.26,
+          0.325,
+          0.399,
+          0.486,
+          0.585,
+          0.701,
+          0.837,
+          0.995,
+          1.181,
+          1.4
+        ],
+        "statId": "dragon-troop-attack"
+      }
+    ],
+    "-2511025654195867708": [
+      {
+        "name": "Dragon Troop Defense",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.025,
+          0.054,
+          0.085,
+          0.12,
+          0.159,
+          0.204,
+          0.255,
+          0.314,
+          0.381,
+          0.46,
+          0.551,
+          0.657,
+          0.782,
+          0.928,
+          1.1
+        ],
+        "statId": "dragon-troop-defense"
+      }
+    ],
+    "-1683551966442264243": [
+      {
+        "name": "Dragon Troop Health",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.01,
+          0.022,
+          0.035,
+          0.049,
+          0.065,
+          0.083,
+          0.104,
+          0.128,
+          0.156,
+          0.188,
+          0.225,
+          0.269,
+          0.32,
+          0.38,
+          0.45
+        ],
+        "statId": "dragon-troop-health"
+      }
+    ],
+    "8887621896489032122": [
+      {
+        "name": "Dragon Troop Attack vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.01,
+          0.022,
+          0.035,
+          0.049,
+          0.065,
+          0.083,
+          0.104,
+          0.128,
+          0.156,
+          0.188,
+          0.225,
+          0.269,
+          0.32,
+          0.38,
+          0.45
+        ],
+        "statId": "dragon-troop-attack-vs-player"
+      }
+    ],
+    "8606906134426131534": [
+      {
+        "name": "Dragon Troop Defense vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.028,
+          0.058,
+          0.092,
+          0.131,
+          0.174,
+          0.223,
+          0.278,
+          0.342,
+          0.416,
+          0.502,
+          0.601,
+          0.717,
+          0.853,
+          1.013,
+          1.2
+        ],
+        "statId": "dragon-troop-defense-vs-player"
+      }
+    ],
+    "2848633687694550127": [
+      {
+        "name": "Dragon Troop Health vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.012,
+          0.024,
+          0.039,
+          0.054,
+          0.072,
+          0.093,
+          0.116,
+          0.143,
+          0.173,
+          0.209,
+          0.25,
+          0.299,
+          0.355,
+          0.422,
+          0.5
+        ],
+        "statId": "dragon-troop-health-vs-player"
+      }
+    ],
+    "-5847040328993203632": [
+      {
+        "name": "Dragon Max March Size",
+        "scope": "Shared",
+        "unit": "count",
+        "values": [
+          69,
+          146,
+          231,
+          327,
+          434,
+          556,
+          696,
+          856,
+          1040,
+          1254,
+          1503,
+          1793,
+          2133,
+          2531,
+          3000
+        ],
+        "statId": "dragon-max-march-size"
+      }
+    ],
+    "2679639809498864913": [
+      {
+        "name": "Dragon Defense",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.012,
+          0.024,
+          0.039,
+          0.054,
+          0.072,
+          0.093,
+          0.116,
+          0.143,
+          0.173,
+          0.209,
+          0.25,
+          0.299,
+          0.355,
+          0.422,
+          0.5
+        ],
+        "statId": "dragon-defense"
+      }
+    ],
+    "2444389987003212004": [
+      {
+        "name": "Dragon Attack vs. Dragon",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.023,
+          0.049,
+          0.077,
+          0.109,
+          0.145,
+          0.185,
+          0.232,
+          0.285,
+          0.347,
+          0.418,
+          0.501,
+          0.598,
+          0.711,
+          0.844,
+          1
+        ],
+        "statId": "dragon-attack-vs-dragon"
+      }
+    ],
+    "7677352344286571239": [
+      {
+        "name": "Dragon Marcher Troop Attack vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.017,
+          0.036,
+          0.058,
+          0.082,
+          0.109,
+          0.139,
+          0.174,
+          0.214,
+          0.26,
+          0.314,
+          0.376,
+          0.448,
+          0.533,
+          0.633,
+          0.75
+        ],
+        "statId": "dragon-marcher-troop-attack-vs-player"
+      }
+    ],
+    "-6519037450134741440": [
+      {
+        "name": "Dragon Troop Attack",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.049,
+          0.102,
+          0.162,
+          0.229,
+          0.304,
+          0.389,
+          0.487,
+          0.599,
+          0.728,
+          0.878,
+          1.052,
+          1.255,
+          1.493,
+          1.772,
+          2.1
+        ],
+        "statId": "dragon-troop-attack"
+      }
+    ],
+    "-6326053810918203958": [
+      {
+        "name": "Dragon Troop Defense",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.038,
+          0.08,
+          0.127,
+          0.18,
+          0.239,
+          0.306,
+          0.383,
+          0.471,
+          0.572,
+          0.69,
+          0.827,
+          0.986,
+          1.173,
+          1.392,
+          1.65
+        ],
+        "statId": "dragon-troop-defense"
+      }
+    ],
+    "-7084005516825224381": [
+      {
+        "name": "Dragon Troop Health",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.014,
+          0.029,
+          0.046,
+          0.065,
+          0.087,
+          0.111,
+          0.139,
+          0.171,
+          0.208,
+          0.251,
+          0.301,
+          0.359,
+          0.427,
+          0.506,
+          0.6
+        ],
+        "statId": "dragon-troop-health"
+      }
+    ],
+    "1028353354520308660": [
+      {
+        "name": "Dragon Troop Attack vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.021,
+          0.044,
+          0.069,
+          0.098,
+          0.13,
+          0.167,
+          0.209,
+          0.257,
+          0.312,
+          0.376,
+          0.451,
+          0.538,
+          0.64,
+          0.759,
+          0.9
+        ],
+        "statId": "dragon-troop-attack-vs-player"
+      }
+    ],
+    "172125714884881984": [
+      {
+        "name": "Dragon Troop Defense vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.042,
+          0.088,
+          0.139,
+          0.196,
+          0.26,
+          0.334,
+          0.417,
+          0.513,
+          0.624,
+          0.753,
+          0.902,
+          1.076,
+          1.28,
+          1.519,
+          1.8
+        ],
+        "statId": "dragon-troop-defense-vs-player"
+      }
+    ],
+    "5952137841819211361": [
+      {
+        "name": "Dragon Troop Health vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.016,
+          0.034,
+          0.054,
+          0.076,
+          0.101,
+          0.13,
+          0.162,
+          0.2,
+          0.243,
+          0.293,
+          0.351,
+          0.418,
+          0.498,
+          0.591,
+          0.7
+        ],
+        "statId": "dragon-troop-health-vs-player"
+      }
+    ],
+    "-2609414701942052770": [
+      {
+        "name": "Dragon Max March Size",
+        "scope": "Shared",
+        "unit": "count",
+        "values": [
+          139,
+          292,
+          462,
+          653,
+          868,
+          1113,
+          1391,
+          1712,
+          2081,
+          2508,
+          3006,
+          3586,
+          4266,
+          5063,
+          6000
+        ],
+        "statId": "dragon-max-march-size"
+      }
+    ],
+    "5781956572101553951": [
+      {
+        "name": "Dragon Defense",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.023,
+          0.049,
+          0.077,
+          0.109,
+          0.145,
+          0.185,
+          0.232,
+          0.285,
+          0.347,
+          0.418,
+          0.501,
+          0.598,
+          0.711,
+          0.844,
+          1
+        ],
+        "statId": "dragon-defense"
+      }
+    ],
+    "6124450559747216106": [
+      {
+        "name": "Dragon Attack vs. Dragon",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.035,
+          0.073,
+          0.116,
+          0.163,
+          0.217,
+          0.278,
+          0.348,
+          0.428,
+          0.52,
+          0.627,
+          0.751,
+          0.897,
+          1.066,
+          1.266,
+          1.5
+        ],
+        "statId": "dragon-attack-vs-dragon"
+      }
+    ],
+    "2276907901400602857": [
+      {
+        "name": "Dragon Marcher Troop Attack vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.035,
+          0.073,
+          0.116,
+          0.163,
+          0.217,
+          0.278,
+          0.348,
+          0.428,
+          0.52,
+          0.627,
+          0.751,
+          0.897,
+          1.066,
+          1.266,
+          1.5
+        ],
+        "statId": "dragon-marcher-troop-attack-vs-player"
+      }
+    ],
+    "2500828528016161358": [
+      {
+        "name": "Dragon Troop Attack vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.073,
+          0.153,
+          0.243,
+          0.343,
+          0.456,
+          0.584,
+          0.731,
+          0.899,
+          1.092,
+          1.317,
+          1.578,
+          1.883,
+          2.239,
+          2.658,
+          3.15
+        ],
+        "statId": "dragon-troop-attack-vs-player"
+      }
+    ],
+    "6131019579626745547": [
+      {
+        "name": "Dragon Infantry Attack vs. Player",
+        "scope": "Infantry",
+        "unit": "percent",
+        "values": [
+          0.037,
+          0.078,
+          0.123,
+          0.174,
+          0.232,
+          0.297,
+          0.371,
+          0.456,
+          0.555,
+          0.669,
+          0.802,
+          0.956,
+          1.137,
+          1.35,
+          1.6
+        ],
+        "statId": "dragon-infantry-attack-vs-player"
+      }
+    ],
+    "-4029013562021816183": [
+      {
+        "name": "Dragon Cavalry Attack vs. Player",
+        "scope": "Cavalry",
+        "unit": "percent",
+        "values": [
+          0.037,
+          0.078,
+          0.123,
+          0.174,
+          0.232,
+          0.297,
+          0.371,
+          0.456,
+          0.555,
+          0.669,
+          0.802,
+          0.956,
+          1.137,
+          1.35,
+          1.6
+        ],
+        "statId": "dragon-cavalry-attack-vs-player"
+      }
+    ],
+    "671453030048861315": [
+      {
+        "name": "Dragon Ranged Attack vs. Player",
+        "scope": "Ranged",
+        "unit": "percent",
+        "values": [
+          0.037,
+          0.078,
+          0.123,
+          0.174,
+          0.232,
+          0.297,
+          0.371,
+          0.456,
+          0.555,
+          0.669,
+          0.802,
+          0.956,
+          1.137,
+          1.35,
+          1.6
+        ],
+        "statId": "dragon-ranged-attack-vs-player"
+      }
+    ],
+    "-632557277938927196": [
+      {
+        "name": "Dragon Max March Size",
+        "scope": "Shared",
+        "unit": "count",
+        "values": [
+          486,
+          1022,
+          1618,
+          2286,
+          3039,
+          3894,
+          4870,
+          5990,
+          7283,
+          8780,
+          10520,
+          12552,
+          14929,
+          17719,
+          21000
+        ],
+        "statId": "dragon-max-march-size"
+      }
+    ],
+    "2307986202783390917": [
+      {
+        "name": "Dragon Infantry Attack vs. Player",
+        "scope": "Infantry",
+        "unit": "percent",
+        "values": [
+          0.055,
+          0.117,
+          0.185,
+          0.261,
+          0.347,
+          0.445,
+          0.557,
+          0.685,
+          0.832,
+          1.003,
+          1.202,
+          1.434,
+          1.706,
+          2.025,
+          2.4
+        ],
+        "statId": "dragon-infantry-attack-vs-player"
+      }
+    ],
+    "-4826647788181738873": [
+      {
+        "name": "Dragon Cavalry Attack vs. Player",
+        "scope": "Cavalry",
+        "unit": "percent",
+        "values": [
+          0.055,
+          0.117,
+          0.185,
+          0.261,
+          0.347,
+          0.445,
+          0.557,
+          0.685,
+          0.832,
+          1.003,
+          1.202,
+          1.434,
+          1.706,
+          2.025,
+          2.4
+        ],
+        "statId": "dragon-cavalry-attack-vs-player"
+      }
+    ],
+    "8954042346964123277": [
+      {
+        "name": "Dragon Ranged Attack vs. Player",
+        "scope": "Ranged",
+        "unit": "percent",
+        "values": [
+          0.055,
+          0.117,
+          0.185,
+          0.261,
+          0.347,
+          0.445,
+          0.557,
+          0.685,
+          0.832,
+          1.003,
+          1.202,
+          1.434,
+          1.706,
+          2.025,
+          2.4
+        ],
+        "statId": "dragon-ranged-attack-vs-player"
+      }
+    ],
+    "3704483417729009939": [
+      {
+        "name": "Dragon Marcher Troop Attack vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.121,
+          0.255,
+          0.404,
+          0.571,
+          0.76,
+          0.974,
+          1.218,
+          1.498,
+          1.821,
+          2.195,
+          2.63,
+          3.138,
+          3.732,
+          4.43,
+          5.25
+        ],
+        "statId": "dragon-marcher-troop-attack-vs-player"
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "app": "Conquest Research Atlas",
+  "version": 1,
+  "progress": {
+    "tab": "tree",
+    "target": "-2656012788146329155",
+    "desired": 5,
+    "levels": {
+      "-2656012788146329155": 2
+    },
+    "maester": 15,
+    "sharedEfficiency": 60,
+    "efficiencies": {
+      "Food": 12.5
+    },
+    "reductions": {
+      "Food": 24.22
+    }
+  }
+}

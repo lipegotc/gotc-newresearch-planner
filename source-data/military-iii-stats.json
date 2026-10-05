@@ -1,0 +1,1356 @@
+{
+  "version": 1,
+  "tree": "Military III",
+  "stats": {
+    "-5894738455932347469": [
+      {
+        "name": "Troop Attack",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.016,
+          0.034,
+          0.054,
+          0.076,
+          0.101,
+          0.13,
+          0.162,
+          0.2,
+          0.243,
+          0.293,
+          0.351,
+          0.418,
+          0.498,
+          0.591,
+          0.7
+        ],
+        "statId": "troop-attack"
+      }
+    ],
+    "2198672300928048439": [
+      {
+        "name": "Troop Defense",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.016,
+          0.034,
+          0.054,
+          0.076,
+          0.101,
+          0.13,
+          0.162,
+          0.2,
+          0.243,
+          0.293,
+          0.351,
+          0.418,
+          0.498,
+          0.591,
+          0.7
+        ],
+        "statId": "troop-defense"
+      }
+    ],
+    "-2656012788146329155": [
+      {
+        "name": "Troop Attack",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.024,
+          0.051,
+          0.081,
+          0.114,
+          0.152,
+          0.195,
+          0.244,
+          0.3,
+          0.364,
+          0.439,
+          0.526,
+          0.628,
+          0.746,
+          0.886,
+          1.05
+        ],
+        "statId": "troop-attack"
+      }
+    ],
+    "-7636246919942447440": [
+      {
+        "name": "Troop Health",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.012,
+          0.024,
+          0.039,
+          0.054,
+          0.072,
+          0.093,
+          0.116,
+          0.143,
+          0.173,
+          0.209,
+          0.25,
+          0.299,
+          0.355,
+          0.422,
+          0.5
+        ],
+        "statId": "troop-health"
+      }
+    ],
+    "7751007378312228665": [
+      {
+        "name": "Troop Defense",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.017,
+          0.036,
+          0.058,
+          0.082,
+          0.109,
+          0.139,
+          0.174,
+          0.214,
+          0.26,
+          0.314,
+          0.376,
+          0.448,
+          0.533,
+          0.633,
+          0.75
+        ],
+        "statId": "troop-defense"
+      }
+    ],
+    "-2083824083537154882": [
+      {
+        "name": "Troop Health",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.01,
+          0.022,
+          0.035,
+          0.049,
+          0.065,
+          0.083,
+          0.104,
+          0.128,
+          0.156,
+          0.188,
+          0.225,
+          0.269,
+          0.32,
+          0.38,
+          0.45
+        ],
+        "statId": "troop-health"
+      }
+    ],
+    "-7738213318256819884": [
+      {
+        "name": "Marcher Troop Attack vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.012,
+          0.024,
+          0.039,
+          0.054,
+          0.072,
+          0.093,
+          0.116,
+          0.143,
+          0.173,
+          0.209,
+          0.25,
+          0.299,
+          0.355,
+          0.422,
+          0.5
+        ],
+        "statId": "marcher-troop-attack-vs-player"
+      }
+    ],
+    "7120981475823510849": [
+      {
+        "name": "Max March Size",
+        "scope": "Shared",
+        "unit": "count",
+        "values": [
+          92,
+          195,
+          308,
+          435,
+          579,
+          742,
+          928,
+          1141,
+          1387,
+          1672,
+          2004,
+          2391,
+          2844,
+          3375,
+          4000
+        ],
+        "statId": "max-march-size"
+      }
+    ],
+    "-9190505132307125515": [
+      {
+        "name": "Troop Defense vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.014,
+          0.029,
+          0.046,
+          0.065,
+          0.087,
+          0.111,
+          0.139,
+          0.171,
+          0.208,
+          0.251,
+          0.301,
+          0.359,
+          0.427,
+          0.506,
+          0.6
+        ],
+        "statId": "troop-defense-vs-player"
+      }
+    ],
+    "9136837660805148406": [
+      {
+        "name": "Troop Attack vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.021,
+          0.044,
+          0.069,
+          0.098,
+          0.13,
+          0.167,
+          0.209,
+          0.257,
+          0.312,
+          0.376,
+          0.451,
+          0.538,
+          0.64,
+          0.759,
+          0.9
+        ],
+        "statId": "troop-attack-vs-player"
+      }
+    ],
+    "2455549524139791139": [
+      {
+        "name": "Troop Health vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.009,
+          0.019,
+          0.031,
+          0.044,
+          0.058,
+          0.074,
+          0.093,
+          0.114,
+          0.139,
+          0.167,
+          0.2,
+          0.239,
+          0.284,
+          0.338,
+          0.4
+        ],
+        "statId": "troop-health-vs-player"
+      }
+    ],
+    "-763755216593479429": [
+      {
+        "name": "Troop Defense vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.021,
+          0.044,
+          0.069,
+          0.098,
+          0.13,
+          0.167,
+          0.209,
+          0.257,
+          0.312,
+          0.376,
+          0.451,
+          0.538,
+          0.64,
+          0.759,
+          0.9
+        ],
+        "statId": "troop-defense-vs-player"
+      }
+    ],
+    "855347042154077432": [
+      {
+        "name": "Troop Attack vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.031,
+          0.066,
+          0.104,
+          0.147,
+          0.195,
+          0.25,
+          0.313,
+          0.385,
+          0.468,
+          0.564,
+          0.676,
+          0.807,
+          0.96,
+          1.139,
+          1.35
+        ],
+        "statId": "troop-attack-vs-player"
+      }
+    ],
+    "6269434697169674541": [
+      {
+        "name": "Troop Health vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.014,
+          0.029,
+          0.046,
+          0.065,
+          0.087,
+          0.111,
+          0.139,
+          0.171,
+          0.208,
+          0.251,
+          0.301,
+          0.359,
+          0.427,
+          0.506,
+          0.6
+        ],
+        "statId": "troop-health-vs-player"
+      }
+    ],
+    "-2193803771968031910": [
+      {
+        "name": "Marcher Troop Attack vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.023,
+          0.049,
+          0.077,
+          0.109,
+          0.145,
+          0.185,
+          0.232,
+          0.285,
+          0.347,
+          0.418,
+          0.501,
+          0.598,
+          0.711,
+          0.844,
+          1
+        ],
+        "statId": "marcher-troop-attack-vs-player"
+      }
+    ],
+    "1711528420106377039": [
+      {
+        "name": "Max March Size",
+        "scope": "Shared",
+        "unit": "count",
+        "values": [
+          185,
+          389,
+          616,
+          871,
+          1158,
+          1483,
+          1855,
+          2282,
+          2774,
+          3345,
+          4008,
+          4782,
+          5687,
+          6750,
+          8000
+        ],
+        "statId": "max-march-size"
+      }
+    ],
+    "-273240468139184229": [
+      {
+        "name": "Infantry Attack",
+        "scope": "Infantry",
+        "unit": "percent",
+        "values": [
+          0.028,
+          0.058,
+          0.092,
+          0.131,
+          0.174,
+          0.223,
+          0.278,
+          0.342,
+          0.416,
+          0.502,
+          0.601,
+          0.717,
+          0.853,
+          1.013,
+          1.2
+        ],
+        "statId": "infantry-attack"
+      }
+    ],
+    "-4894399302909117003": [
+      {
+        "name": "Cavalry Attack",
+        "scope": "Cavalry",
+        "unit": "percent",
+        "values": [
+          0.028,
+          0.058,
+          0.092,
+          0.131,
+          0.174,
+          0.223,
+          0.278,
+          0.342,
+          0.416,
+          0.502,
+          0.601,
+          0.717,
+          0.853,
+          1.013,
+          1.2
+        ],
+        "statId": "cavalry-attack"
+      }
+    ],
+    "-5695040540534870496": [
+      {
+        "name": "Ranged Attack",
+        "scope": "Ranged",
+        "unit": "percent",
+        "values": [
+          0.028,
+          0.058,
+          0.092,
+          0.131,
+          0.174,
+          0.223,
+          0.278,
+          0.342,
+          0.416,
+          0.502,
+          0.601,
+          0.717,
+          0.853,
+          1.013,
+          1.2
+        ],
+        "statId": "ranged-attack"
+      }
+    ],
+    "7656579550939110466": [
+      {
+        "name": "Infantry Defense",
+        "scope": "Infantry",
+        "unit": "percent",
+        "values": [
+          0.023,
+          0.049,
+          0.077,
+          0.109,
+          0.145,
+          0.185,
+          0.232,
+          0.285,
+          0.347,
+          0.418,
+          0.501,
+          0.598,
+          0.711,
+          0.844,
+          1
+        ],
+        "statId": "infantry-defense"
+      }
+    ],
+    "-813503158758799667": [
+      {
+        "name": "Cavalry Defense",
+        "scope": "Cavalry",
+        "unit": "percent",
+        "values": [
+          0.023,
+          0.049,
+          0.077,
+          0.109,
+          0.145,
+          0.185,
+          0.232,
+          0.285,
+          0.347,
+          0.418,
+          0.501,
+          0.598,
+          0.711,
+          0.844,
+          1
+        ],
+        "statId": "cavalry-defense"
+      }
+    ],
+    "-2161578963900190908": [
+      {
+        "name": "Ranged Defense",
+        "scope": "Ranged",
+        "unit": "percent",
+        "values": [
+          0.023,
+          0.049,
+          0.077,
+          0.109,
+          0.145,
+          0.185,
+          0.232,
+          0.285,
+          0.347,
+          0.418,
+          0.501,
+          0.598,
+          0.711,
+          0.844,
+          1
+        ],
+        "statId": "ranged-defense"
+      }
+    ],
+    "-8563843360526656107": [
+      {
+        "name": "Infantry Attack",
+        "scope": "Infantry",
+        "unit": "percent",
+        "values": [
+          0.042,
+          0.088,
+          0.139,
+          0.196,
+          0.26,
+          0.334,
+          0.417,
+          0.513,
+          0.624,
+          0.753,
+          0.902,
+          1.076,
+          1.28,
+          1.519,
+          1.8
+        ],
+        "statId": "infantry-attack"
+      }
+    ],
+    "-3962669387816939589": [
+      {
+        "name": "Cavalry Attack",
+        "scope": "Cavalry",
+        "unit": "percent",
+        "values": [
+          0.042,
+          0.088,
+          0.139,
+          0.196,
+          0.26,
+          0.334,
+          0.417,
+          0.513,
+          0.624,
+          0.753,
+          0.902,
+          1.076,
+          1.28,
+          1.519,
+          1.8
+        ],
+        "statId": "cavalry-attack"
+      }
+    ],
+    "-4186805972426187730": [
+      {
+        "name": "Ranged Attack",
+        "scope": "Ranged",
+        "unit": "percent",
+        "values": [
+          0.042,
+          0.088,
+          0.139,
+          0.196,
+          0.26,
+          0.334,
+          0.417,
+          0.513,
+          0.624,
+          0.753,
+          0.902,
+          1.076,
+          1.28,
+          1.519,
+          1.8
+        ],
+        "statId": "ranged-attack"
+      }
+    ],
+    "2257427538622754380": [
+      {
+        "name": "Infantry Defense",
+        "scope": "Infantry",
+        "unit": "percent",
+        "values": [
+          0.035,
+          0.073,
+          0.116,
+          0.163,
+          0.217,
+          0.278,
+          0.348,
+          0.428,
+          0.52,
+          0.627,
+          0.751,
+          0.897,
+          1.066,
+          1.266,
+          1.5
+        ],
+        "statId": "infantry-defense"
+      }
+    ],
+    "-9104158844892482365": [
+      {
+        "name": "Cavalry Defense",
+        "scope": "Cavalry",
+        "unit": "percent",
+        "values": [
+          0.035,
+          0.073,
+          0.116,
+          0.163,
+          0.217,
+          0.278,
+          0.348,
+          0.428,
+          0.52,
+          0.627,
+          0.751,
+          0.897,
+          1.066,
+          1.266,
+          1.5
+        ],
+        "statId": "cavalry-defense"
+      }
+    ],
+    "-7560739441347633846": [
+      {
+        "name": "Ranged Defense",
+        "scope": "Ranged",
+        "unit": "percent",
+        "values": [
+          0.035,
+          0.073,
+          0.116,
+          0.163,
+          0.217,
+          0.278,
+          0.348,
+          0.428,
+          0.52,
+          0.627,
+          0.751,
+          0.897,
+          1.066,
+          1.266,
+          1.5
+        ],
+        "statId": "ranged-defense"
+      }
+    ],
+    "137856960568519995": [
+      {
+        "name": "Infantry Attack vs. Player",
+        "scope": "Infantry",
+        "unit": "percent",
+        "values": [
+          0.032,
+          0.068,
+          0.108,
+          0.152,
+          0.203,
+          0.26,
+          0.325,
+          0.399,
+          0.486,
+          0.585,
+          0.701,
+          0.837,
+          0.995,
+          1.181,
+          1.4
+        ],
+        "statId": "infantry-attack-vs-player"
+      }
+    ],
+    "4678381383100427000": [
+      {
+        "name": "Cavalry Attack vs. Player",
+        "scope": "Cavalry",
+        "unit": "percent",
+        "values": [
+          0.032,
+          0.068,
+          0.108,
+          0.152,
+          0.203,
+          0.26,
+          0.325,
+          0.399,
+          0.486,
+          0.585,
+          0.701,
+          0.837,
+          0.995,
+          1.181,
+          1.4
+        ],
+        "statId": "cavalry-attack-vs-player"
+      }
+    ],
+    "-120364394661512648": [
+      {
+        "name": "Ranged Attack vs. Player",
+        "scope": "Ranged",
+        "unit": "percent",
+        "values": [
+          0.032,
+          0.068,
+          0.108,
+          0.152,
+          0.203,
+          0.26,
+          0.325,
+          0.399,
+          0.486,
+          0.585,
+          0.701,
+          0.837,
+          0.995,
+          1.181,
+          1.4
+        ],
+        "statId": "ranged-attack-vs-player"
+      }
+    ],
+    "3364211848814252143": [
+      {
+        "name": "Infantry Attack vs. Seat Of Power",
+        "scope": "Infantry",
+        "unit": "percent",
+        "values": [
+          0.04,
+          0.085,
+          0.135,
+          0.19,
+          0.253,
+          0.325,
+          0.406,
+          0.499,
+          0.607,
+          0.732,
+          0.877,
+          1.046,
+          1.244,
+          1.477,
+          1.75
+        ],
+        "statId": "infantry-attack-vs-seat-of-power"
+      }
+    ],
+    "8158063724333365458": [
+      {
+        "name": "Cavalry Attack vs. Seat Of Power",
+        "scope": "Cavalry",
+        "unit": "percent",
+        "values": [
+          0.04,
+          0.085,
+          0.135,
+          0.19,
+          0.253,
+          0.325,
+          0.406,
+          0.499,
+          0.607,
+          0.732,
+          0.877,
+          1.046,
+          1.244,
+          1.477,
+          1.75
+        ],
+        "statId": "cavalry-attack-vs-seat-of-power"
+      }
+    ],
+    "2745843752604722467": [
+      {
+        "name": "Ranged Attack vs. Seat Of Power",
+        "scope": "Ranged",
+        "unit": "percent",
+        "values": [
+          0.04,
+          0.085,
+          0.135,
+          0.19,
+          0.253,
+          0.325,
+          0.406,
+          0.499,
+          0.607,
+          0.732,
+          0.877,
+          1.046,
+          1.244,
+          1.477,
+          1.75
+        ],
+        "statId": "ranged-attack-vs-seat-of-power"
+      }
+    ],
+    "6078152790208263830": [
+      {
+        "name": "Infantry Defense vs. Seat Of Power",
+        "scope": "Infantry",
+        "unit": "percent",
+        "values": [
+          0.032,
+          0.068,
+          0.108,
+          0.152,
+          0.203,
+          0.26,
+          0.325,
+          0.399,
+          0.486,
+          0.585,
+          0.701,
+          0.837,
+          0.995,
+          1.181,
+          1.4
+        ],
+        "statId": "infantry-defense-vs-seat-of-power"
+      }
+    ],
+    "3904399664414903461": [
+      {
+        "name": "Cavalry Defense vs. Seat Of Power",
+        "scope": "Cavalry",
+        "unit": "percent",
+        "values": [
+          0.032,
+          0.068,
+          0.108,
+          0.152,
+          0.203,
+          0.26,
+          0.325,
+          0.399,
+          0.486,
+          0.585,
+          0.701,
+          0.837,
+          0.995,
+          1.181,
+          1.4
+        ],
+        "statId": "cavalry-defense-vs-seat-of-power"
+      }
+    ],
+    "-6678340610933242641": [
+      {
+        "name": "Ranged Defense vs. Seat Of Power",
+        "scope": "Ranged",
+        "unit": "percent",
+        "values": [
+          0.032,
+          0.068,
+          0.108,
+          0.152,
+          0.203,
+          0.26,
+          0.325,
+          0.399,
+          0.486,
+          0.585,
+          0.701,
+          0.837,
+          0.995,
+          1.181,
+          1.4
+        ],
+        "statId": "ranged-defense-vs-seat-of-power"
+      }
+    ],
+    "8987014129061082496": [
+      {
+        "name": "Infantry Health vs. Seat Of Power",
+        "scope": "Infantry",
+        "unit": "percent",
+        "values": [
+          0.016,
+          0.034,
+          0.054,
+          0.076,
+          0.101,
+          0.13,
+          0.162,
+          0.2,
+          0.243,
+          0.293,
+          0.351,
+          0.418,
+          0.498,
+          0.591,
+          0.7
+        ],
+        "statId": "infantry-health-vs-seat-of-power"
+      }
+    ],
+    "2539782653427719485": [
+      {
+        "name": "Cavalry Health vs. Seat Of Power",
+        "scope": "Cavalry",
+        "unit": "percent",
+        "values": [
+          0.016,
+          0.034,
+          0.054,
+          0.076,
+          0.101,
+          0.13,
+          0.162,
+          0.2,
+          0.243,
+          0.293,
+          0.351,
+          0.418,
+          0.498,
+          0.591,
+          0.7
+        ],
+        "statId": "cavalry-health-vs-seat-of-power"
+      }
+    ],
+    "8364151246597849292": [
+      {
+        "name": "Ranged Health vs. Seat Of Power",
+        "scope": "Ranged",
+        "unit": "percent",
+        "values": [
+          0.016,
+          0.034,
+          0.054,
+          0.076,
+          0.101,
+          0.13,
+          0.162,
+          0.2,
+          0.243,
+          0.293,
+          0.351,
+          0.418,
+          0.498,
+          0.591,
+          0.7
+        ],
+        "statId": "ranged-health-vs-seat-of-power"
+      }
+    ],
+    "8429499108111523637": [
+      {
+        "name": "Infantry Attack vs. Player",
+        "scope": "Infantry",
+        "unit": "percent",
+        "values": [
+          0.049,
+          0.102,
+          0.162,
+          0.229,
+          0.304,
+          0.389,
+          0.487,
+          0.599,
+          0.728,
+          0.878,
+          1.052,
+          1.255,
+          1.493,
+          1.772,
+          2.1
+        ],
+        "statId": "infantry-attack-vs-player"
+      }
+    ],
+    "3890740639833626870": [
+      {
+        "name": "Cavalry Attack vs. Player",
+        "scope": "Cavalry",
+        "unit": "percent",
+        "values": [
+          0.049,
+          0.102,
+          0.162,
+          0.229,
+          0.304,
+          0.389,
+          0.487,
+          0.599,
+          0.728,
+          0.878,
+          1.052,
+          1.255,
+          1.493,
+          1.772,
+          2.1
+        ],
+        "statId": "cavalry-attack-vs-player"
+      }
+    ],
+    "-8410967276052969418": [
+      {
+        "name": "Ranged Attack vs. Player",
+        "scope": "Ranged",
+        "unit": "percent",
+        "values": [
+          0.049,
+          0.102,
+          0.162,
+          0.229,
+          0.304,
+          0.389,
+          0.487,
+          0.599,
+          0.728,
+          0.878,
+          1.052,
+          1.255,
+          1.493,
+          1.772,
+          2.1
+        ],
+        "statId": "ranged-attack-vs-player"
+      }
+    ],
+    "6602919383202144865": [
+      {
+        "name": "Infantry Attack vs. Seat Of Power",
+        "scope": "Infantry",
+        "unit": "percent",
+        "values": [
+          0.075,
+          0.158,
+          0.25,
+          0.354,
+          0.47,
+          0.603,
+          0.754,
+          0.927,
+          1.127,
+          1.359,
+          1.628,
+          1.943,
+          2.31,
+          2.742,
+          3.25
+        ],
+        "statId": "infantry-attack-vs-seat-of-power"
+      }
+    ],
+    "298679379789482716": [
+      {
+        "name": "Cavalry Attack vs. Seat Of Power",
+        "scope": "Cavalry",
+        "unit": "percent",
+        "values": [
+          0.075,
+          0.158,
+          0.25,
+          0.354,
+          0.47,
+          0.603,
+          0.754,
+          0.927,
+          1.127,
+          1.359,
+          1.628,
+          1.943,
+          2.31,
+          2.742,
+          3.25
+        ],
+        "statId": "cavalry-attack-vs-seat-of-power"
+      }
+    ],
+    "5983435297488049965": [
+      {
+        "name": "Ranged Attack vs. Seat Of Power",
+        "scope": "Ranged",
+        "unit": "percent",
+        "values": [
+          0.075,
+          0.158,
+          0.25,
+          0.354,
+          0.47,
+          0.603,
+          0.754,
+          0.927,
+          1.127,
+          1.359,
+          1.628,
+          1.943,
+          2.31,
+          2.742,
+          3.25
+        ],
+        "statId": "ranged-attack-vs-seat-of-power"
+      }
+    ],
+    "2399208217446728856": [
+      {
+        "name": "Infantry Defense vs. Seat Of Power",
+        "scope": "Infantry",
+        "unit": "percent",
+        "values": [
+          0.06,
+          0.126,
+          0.2,
+          0.283,
+          0.376,
+          0.482,
+          0.603,
+          0.742,
+          0.902,
+          1.087,
+          1.303,
+          1.554,
+          1.848,
+          2.194,
+          2.6
+        ],
+        "statId": "infantry-defense-vs-seat-of-power"
+      }
+    ],
+    "4845145481995566763": [
+      {
+        "name": "Cavalry Defense vs. Seat Of Power",
+        "scope": "Cavalry",
+        "unit": "percent",
+        "values": [
+          0.06,
+          0.126,
+          0.2,
+          0.283,
+          0.376,
+          0.482,
+          0.603,
+          0.742,
+          0.902,
+          1.087,
+          1.303,
+          1.554,
+          1.848,
+          2.194,
+          2.6
+        ],
+        "statId": "cavalry-defense-vs-seat-of-power"
+      }
+    ],
+    "-3007392507039861023": [
+      {
+        "name": "Ranged Defense vs. Seat Of Power",
+        "scope": "Ranged",
+        "unit": "percent",
+        "values": [
+          0.06,
+          0.126,
+          0.2,
+          0.283,
+          0.376,
+          0.482,
+          0.603,
+          0.742,
+          0.902,
+          1.087,
+          1.303,
+          1.554,
+          1.848,
+          2.194,
+          2.6
+        ],
+        "statId": "ranged-defense-vs-seat-of-power"
+      }
+    ],
+    "696392559746860942": [
+      {
+        "name": "Infantry Health vs. Seat Of Power",
+        "scope": "Infantry",
+        "unit": "percent",
+        "values": [
+          0.03,
+          0.063,
+          0.1,
+          0.142,
+          0.188,
+          0.241,
+          0.301,
+          0.371,
+          0.451,
+          0.543,
+          0.651,
+          0.777,
+          0.924,
+          1.097,
+          1.3
+        ],
+        "statId": "infantry-health-vs-seat-of-power"
+      }
+    ],
+    "6209692261609369395": [
+      {
+        "name": "Cavalry Health vs. Seat Of Power",
+        "scope": "Cavalry",
+        "unit": "percent",
+        "values": [
+          0.03,
+          0.063,
+          0.1,
+          0.142,
+          0.188,
+          0.241,
+          0.301,
+          0.371,
+          0.451,
+          0.543,
+          0.651,
+          0.777,
+          0.924,
+          1.097,
+          1.3
+        ],
+        "statId": "cavalry-health-vs-seat-of-power"
+      }
+    ],
+    "72396061165941442": [
+      {
+        "name": "Ranged Health vs. Seat Of Power",
+        "scope": "Ranged",
+        "unit": "percent",
+        "values": [
+          0.03,
+          0.063,
+          0.1,
+          0.142,
+          0.188,
+          0.241,
+          0.301,
+          0.371,
+          0.451,
+          0.543,
+          0.651,
+          0.777,
+          0.924,
+          1.097,
+          1.3
+        ],
+        "statId": "ranged-health-vs-seat-of-power"
+      }
+    ],
+    "4265288870527911605": [
+      {
+        "name": "Max March Size",
+        "scope": "Shared",
+        "unit": "count",
+        "values": [
+          647,
+          1362,
+          2157,
+          3048,
+          4052,
+          5192,
+          6493,
+          7987,
+          9710,
+          11706,
+          14027,
+          16736,
+          19906,
+          23625,
+          28000
+        ],
+        "statId": "max-march-size"
+      }
+    ],
+    "-3638978107186240864": [
+      {
+        "name": "Marcher Troop Attack vs. Player",
+        "scope": "Shared",
+        "unit": "percent",
+        "values": [
+          0.081,
+          0.17,
+          0.27,
+          0.381,
+          0.507,
+          0.649,
+          0.812,
+          0.998,
+          1.214,
+          1.463,
+          1.753,
+          2.092,
+          2.488,
+          2.953,
+          3.5
+        ],
+        "statId": "marcher-troop-attack-vs-player"
+      }
+    ]
+  }
+}

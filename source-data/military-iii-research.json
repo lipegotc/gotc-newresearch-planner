@@ -1,0 +1,719 @@
+{
+  "version": 1,
+  "tree": "Military III",
+  "research": [
+    {
+      "id": "-5894738455932347469",
+      "name": "Troop Attack I",
+      "row": 1,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": []
+    },
+    {
+      "id": "2198672300928048439",
+      "name": "Troop Defense I",
+      "row": 4,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-5894738455932347469",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-2656012788146329155",
+      "name": "Troop Attack II",
+      "row": 4,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-5894738455932347469",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-7636246919942447440",
+      "name": "Troop Health I",
+      "row": 4,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-5894738455932347469",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "7751007378312228665",
+      "name": "Troop Defense II",
+      "row": 7,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "2198672300928048439",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-2083824083537154882",
+      "name": "Troop Health II",
+      "row": 7,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-7636246919942447440",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-7738213318256819884",
+      "name": "Marcher Troop Attack vs. Player I",
+      "row": 10,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "7751007378312228665",
+          "level": 1
+        },
+        {
+          "id": "-2083824083537154882",
+          "level": 1
+        },
+        {
+          "id": "-2656012788146329155",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "7120981475823510849",
+      "name": "Max March Size I",
+      "row": 13,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-7738213318256819884",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-9190505132307125515",
+      "name": "Troop Defense vs. Player I",
+      "row": 16,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "7120981475823510849",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "9136837660805148406",
+      "name": "Troop Attack vs. Player I",
+      "row": 16,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "7120981475823510849",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "2455549524139791139",
+      "name": "Troop Health vs. Player I",
+      "row": 16,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "7120981475823510849",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-763755216593479429",
+      "name": "Troop Defense vs. Player II",
+      "row": 19,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-9190505132307125515",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "855347042154077432",
+      "name": "Troop Attack vs. Player II",
+      "row": 19,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "9136837660805148406",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "6269434697169674541",
+      "name": "Troop Health vs. Player II",
+      "row": 19,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "2455549524139791139",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-2193803771968031910",
+      "name": "Marcher Troop Attack vs. Player II",
+      "row": 22,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "855347042154077432",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "1711528420106377039",
+      "name": "Max March Size II",
+      "row": 25,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-2193803771968031910",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-273240468139184229",
+      "name": "Infantry Attack I",
+      "row": 28,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "1711528420106377039",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-4894399302909117003",
+      "name": "Cavalry Attack I",
+      "row": 28,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "1711528420106377039",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-5695040540534870496",
+      "name": "Ranged Attack I",
+      "row": 28,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "1711528420106377039",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "7656579550939110466",
+      "name": "Infantry Defense I",
+      "row": 31,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-273240468139184229",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-813503158758799667",
+      "name": "Cavalry Defense I",
+      "row": 31,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-4894399302909117003",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-2161578963900190908",
+      "name": "Ranged Defense I",
+      "row": 31,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-5695040540534870496",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-8563843360526656107",
+      "name": "Infantry Attack II",
+      "row": 34,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "7656579550939110466",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-3962669387816939589",
+      "name": "Cavalry Attack II",
+      "row": 34,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-813503158758799667",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-4186805972426187730",
+      "name": "Ranged Attack II",
+      "row": 34,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-2161578963900190908",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "2257427538622754380",
+      "name": "Infantry Defense II",
+      "row": 37,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-8563843360526656107",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-9104158844892482365",
+      "name": "Cavalry Defense II",
+      "row": 37,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-3962669387816939589",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-7560739441347633846",
+      "name": "Ranged Defense II",
+      "row": 37,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-4186805972426187730",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "137856960568519995",
+      "name": "Infantry Attack vs. Player I",
+      "row": 40,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "2257427538622754380",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "4678381383100427000",
+      "name": "Cavalry Attack vs. Player I",
+      "row": 40,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-9104158844892482365",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-120364394661512648",
+      "name": "Ranged Attack vs. Player I",
+      "row": 40,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-7560739441347633846",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "3364211848814252143",
+      "name": "Infantry Attack vs. Player SOP I",
+      "row": 43,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "137856960568519995",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "8158063724333365458",
+      "name": "Cavalry Attack vs. Player SOP I",
+      "row": 43,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "4678381383100427000",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "2745843752604722467",
+      "name": "Ranged Attack vs. Player SOP I",
+      "row": 43,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-120364394661512648",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "6078152790208263830",
+      "name": "Infantry Defense vs. Player SOP I",
+      "row": 46,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "3364211848814252143",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "3904399664414903461",
+      "name": "Cavalry Defense vs. Player SOP I",
+      "row": 46,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "8158063724333365458",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-6678340610933242641",
+      "name": "Ranged Defense vs. Player SOP I",
+      "row": 46,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "2745843752604722467",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "8987014129061082496",
+      "name": "Infantry Health vs. Player SOP I",
+      "row": 49,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "6078152790208263830",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "2539782653427719485",
+      "name": "Cavalry Health vs. Player SOP I",
+      "row": 49,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "3904399664414903461",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "8364151246597849292",
+      "name": "Ranged Health vs. Player SOP I",
+      "row": 49,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-6678340610933242641",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "8429499108111523637",
+      "name": "Infantry Attack vs. Player II",
+      "row": 52,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "8987014129061082496",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "3890740639833626870",
+      "name": "Cavalry Attack vs. Player II",
+      "row": 52,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "2539782653427719485",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-8410967276052969418",
+      "name": "Ranged Attack vs. Player II",
+      "row": 52,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "8364151246597849292",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "6602919383202144865",
+      "name": "Infantry Attack vs. Player SOP II",
+      "row": 55,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "8429499108111523637",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "298679379789482716",
+      "name": "Cavalry Attack vs. Player SOP II",
+      "row": 55,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "3890740639833626870",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "5983435297488049965",
+      "name": "Ranged Attack vs. Player SOP II",
+      "row": 55,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-8410967276052969418",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "2399208217446728856",
+      "name": "Infantry Defense vs. Player SOP II",
+      "row": 58,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "6602919383202144865",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "4845145481995566763",
+      "name": "Cavalry Defense vs. Player SOP II",
+      "row": 58,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "298679379789482716",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-3007392507039861023",
+      "name": "Ranged Defense vs. Player SOP II",
+      "row": 58,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "5983435297488049965",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "696392559746860942",
+      "name": "Infantry Health vs. Player SOP II",
+      "row": 61,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "2399208217446728856",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "6209692261609369395",
+      "name": "Cavalry Health vs. Player SOP II",
+      "row": 61,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "4845145481995566763",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "72396061165941442",
+      "name": "Ranged Health vs. Player SOP II",
+      "row": 61,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-3007392507039861023",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "4265288870527911605",
+      "name": "Max March Size III",
+      "row": 64,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "6209692261609369395",
+          "level": 1
+        },
+        {
+          "id": "696392559746860942",
+          "level": 1
+        },
+        {
+          "id": "72396061165941442",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-3638978107186240864",
+      "name": "Marcher Troop Attack vs. Player III",
+      "row": 67,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "4265288870527911605",
+          "level": 1
+        }
+      ]
+    }
+  ]
+}

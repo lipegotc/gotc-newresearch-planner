@@ -1,0 +1,18 @@
+# Local references and generated inspection/preview artifacts
+local-reference/
+output/
+exe_inspection/
+
+# Local tools, editor settings, and caches
+.codex/
+.agents/
+.vscode/
+.idea/
+__pycache__/
+*.py[cod]
+node_modules/
+.env
+.env.*
+*.log
+Thumbs.db
+.DS_Store

@@ -1,0 +1,418 @@
+{
+  "version": 1,
+  "tree": "Dragon Combat",
+  "research": [
+    {
+      "id": "-3416572878383616946",
+      "name": "Dragon Troop Attack I",
+      "row": 1,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": []
+    },
+    {
+      "id": "-2511025654195867708",
+      "name": "Dragon Troop Defense I",
+      "row": 4,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-3416572878383616946",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-1683551966442264243",
+      "name": "Dragon Troop Health I",
+      "row": 4,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-3416572878383616946",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "8887621896489032122",
+      "name": "Dragon Troop Attack vs. Player I",
+      "row": 7,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-2511025654195867708",
+          "level": 1
+        },
+        {
+          "id": "-1683551966442264243",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "8606906134426131534",
+      "name": "Dragon Troop Defense vs. Player I",
+      "row": 10,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "8887621896489032122",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "2848633687694550127",
+      "name": "Dragon Troop Health vs. Player I",
+      "row": 10,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "8887621896489032122",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-5847040328993203632",
+      "name": "Dragon Max March Size I",
+      "row": 13,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "8606906134426131534",
+          "level": 1
+        },
+        {
+          "id": "2848633687694550127",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "2679639809498864913",
+      "name": "Dragon Defense I",
+      "row": 16,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-5847040328993203632",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "2444389987003212004",
+      "name": "Dragon Attack vs. Dragon I",
+      "row": 16,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-5847040328993203632",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "7677352344286571239",
+      "name": "Dragon Marcher Troop Attack vs. Player I",
+      "row": 19,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-5847040328993203632",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-6519037450134741440",
+      "name": "Dragon Troop Attack II",
+      "row": 22,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "7677352344286571239",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-6326053810918203958",
+      "name": "Dragon Troop Defense II",
+      "row": 25,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-6519037450134741440",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-7084005516825224381",
+      "name": "Dragon Troop Health II",
+      "row": 25,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-6519037450134741440",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "1028353354520308660",
+      "name": "Dragon Troop Attack vs. Player II",
+      "row": 28,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-6519037450134741440",
+          "level": 1
+        },
+        {
+          "id": "-6326053810918203958",
+          "level": 1
+        },
+        {
+          "id": "-7084005516825224381",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "172125714884881984",
+      "name": "Dragon Troop Defense vs. Player II",
+      "row": 31,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "1028353354520308660",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "5952137841819211361",
+      "name": "Dragon Troop Health vs. Player II",
+      "row": 31,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "1028353354520308660",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-2609414701942052770",
+      "name": "Dragon Max March Size II",
+      "row": 34,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "1028353354520308660",
+          "level": 1
+        },
+        {
+          "id": "172125714884881984",
+          "level": 1
+        },
+        {
+          "id": "5952137841819211361",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "5781956572101553951",
+      "name": "Dragon Defense II",
+      "row": 37,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-2609414701942052770",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "6124450559747216106",
+      "name": "Dragon Attack vs. Dragon II",
+      "row": 37,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-2609414701942052770",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "2276907901400602857",
+      "name": "Dragon Marcher Troop Attack vs. Player II",
+      "row": 40,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-2609414701942052770",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "2500828528016161358",
+      "name": "Dragon Troop Attack vs. Player III",
+      "row": 43,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "2276907901400602857",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "6131019579626745547",
+      "name": "Dragon Infantry Attack vs. Player I",
+      "row": 46,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "2500828528016161358",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-4029013562021816183",
+      "name": "Dragon Cavalry Attack vs. Player I",
+      "row": 46,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "2500828528016161358",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "671453030048861315",
+      "name": "Dragon Ranged Attack vs. Player I",
+      "row": 46,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "2500828528016161358",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-632557277938927196",
+      "name": "Dragon Max March Size III",
+      "row": 49,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "6131019579626745547",
+          "level": 1
+        },
+        {
+          "id": "-4029013562021816183",
+          "level": 1
+        },
+        {
+          "id": "671453030048861315",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "2307986202783390917",
+      "name": "Dragon Infantry Attack vs. Player II",
+      "row": 52,
+      "column": 2,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-632557277938927196",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "-4826647788181738873",
+      "name": "Dragon Cavalry Attack vs. Player II",
+      "row": 52,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-632557277938927196",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "8954042346964123277",
+      "name": "Dragon Ranged Attack vs. Player II",
+      "row": 52,
+      "column": 8,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "-632557277938927196",
+          "level": 1
+        }
+      ]
+    },
+    {
+      "id": "3704483417729009939",
+      "name": "Dragon Marcher Troop Attack vs. Player III",
+      "row": 55,
+      "column": 5,
+      "maxLevel": 15,
+      "requires": [
+        {
+          "id": "2307986202783390917",
+          "level": 1
+        },
+        {
+          "id": "-4826647788181738873",
+          "level": 1
+        },
+        {
+          "id": "8954042346964123277",
+          "level": 1
+        }
+      ]
+    }
+  ]
+}
