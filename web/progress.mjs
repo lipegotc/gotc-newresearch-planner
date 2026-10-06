@@ -1,6 +1,11 @@
 export const STORAGE_KEY = "conquest-research-atlas-v1";
 export const APP_TITLE = "GoT: Conquest - Military 3 | Dragon Combat Research Planner";
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
+export const RESEARCH_TREES = ["Military III", "Dragon Combat"];
+const DRAGON_MATERIALS = ["Dragon Lore", "Dragon Secrets", "Dragon Tomes"];
+export function resourcesForTree(resources, tree) {
+  return resources.filter(resource => tree !== "Military III" || !DRAGON_MATERIALS.includes(resource));
+}
 
 export function boundedNumber(value, min = 0, max = Number.MAX_SAFE_INTEGER, integer = false) {
   const parsed = Number(value);
@@ -34,17 +39,26 @@ export function normalizeProgress(raw, research, resources) {
   const markHistory = Object.fromEntries(Object.entries(record(input.markHistory)).filter(([id, entry]) =>
     byId.has(id) && entry && Number.isInteger(entry.before) && Number.isInteger(entry.after)
     && entry.before >= 0 && entry.before < entry.after && entry.after <= byId.get(id).maxLevel && levels[id] === entry.after));
-  const adjustments = (values, max) => Object.fromEntries(Object.entries(record(values))
-    .filter(([resource]) => resources.includes(resource))
+  const adjustments = (values, max, allowed) => Object.fromEntries(Object.entries(record(values))
+    .filter(([resource]) => allowed.includes(resource))
     .map(([resource, value]) => [resource, boundedNumber(value, 0, max)]));
+  // Copy legacy common boosts to both trees once; new profiles stay independent.
+  const boosts = Object.fromEntries(RESEARCH_TREES.map(tree => {
+    const source = input.schemaVersion >= 3 ? record(record(input.boosts)[tree]) : input;
+    const allowed = resourcesForTree(resources, tree);
+    return [tree, {
+      efficiencies: adjustments(source.efficiencies, Number.MAX_SAFE_INTEGER, allowed),
+      reductions: adjustments(source.reductions, 100, allowed),
+      sharedEfficiency: boundedNumber(source.sharedEfficiency),
+    }];
+  }));
   return {
     schemaVersion: SCHEMA_VERSION,
-    tab: input.schemaVersion === SCHEMA_VERSION && ["calculator", "help", "stats"].includes(input.tab) ? input.tab : "calculator",
+    tab: input.schemaVersion >= 2 && ["calculator", "help", "stats"].includes(input.tab) ? input.tab : "calculator",
     goals: [...goals].map(([id, level]) => ({ id, level })), levels, markHistory,
     maester: boundedNumber(input.maester ?? 1, 1, 40, true),
-    efficiencies: adjustments(input.efficiencies, Number.MAX_SAFE_INTEGER),
-    reductions: adjustments(input.reductions, 100),
-    sharedEfficiency: boundedNumber(input.sharedEfficiency),
+    boosts,
+    boostTree: RESEARCH_TREES.includes(input.boostTree) ? input.boostTree : "Military III",
   };
 }
 
@@ -56,7 +70,8 @@ export function setCompletedLevel(state, id, level) {
 }
 
 export function resetCalculation(state) {
-  return { ...state, goals: [], efficiencies: {}, reductions: {}, sharedEfficiency: 0 };
+  return { ...state, goals: [], boosts: Object.fromEntries(RESEARCH_TREES.map(tree =>
+    [tree, { efficiencies: {}, reductions: {}, sharedEfficiency: 0 }])) };
 }
 
 export function toggleRequirement(state, id, required, checked) {

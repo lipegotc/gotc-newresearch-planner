@@ -57,6 +57,26 @@ export function calculateCosts(plan, resources, efficiencies = {}, reductions = 
   });
 }
 
+// Discount each tree before summing: a combined plan can have different boosts.
+export function calculateTreeCosts(plan, resources, boosts = {}) {
+  const groups = new Map();
+  for (const step of plan) {
+    if (!groups.has(step.item.tree)) groups.set(step.item.tree, []);
+    groups.get(step.item.tree).push(step);
+  }
+  const totals = resources.map(resource => ({ resource, original: 0, reduced: 0, saved: 0 }));
+  for (const [tree, steps] of groups) {
+    const profile = boosts[tree] || {};
+    const costs = calculateCosts(steps, resources, profile.efficiencies, profile.reductions, profile.sharedEfficiency);
+    costs.forEach((cost, index) => {
+      totals[index].original += cost.original;
+      totals[index].reduced += cost.reduced;
+      totals[index].saved += cost.saved;
+    });
+  }
+  return totals;
+}
+
 export function formatNumber(number, digits = 0) {
   return new Intl.NumberFormat(undefined, { maximumFractionDigits: digits }).format(number);
 }

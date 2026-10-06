@@ -1,5 +1,5 @@
-import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateCosts, formatNumber, formatStat, valueAt } from './model.mjs';
-import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=decimal-input-1';
+import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, formatNumber, formatStat, valueAt } from './model.mjs?v=tree-boosts-1';
+import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=tree-boosts-1';
 
 const byId = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -79,7 +79,7 @@ function togglePickerGoal(id) {
   announce(selected ? `${item.name} unselected. Its progress is still saved.` : `${item.name} added to the calculator.`);
 }
 function costTable(plan, resources) {
-  const costs = calculateCosts(plan, resources, state.efficiencies, state.reductions, state.sharedEfficiency);
+  const costs = calculateTreeCosts(plan, resources, state.boosts);
   const rows = costs.filter(cost => cost.original).map(cost => `<tr><th scope="row">${escapeHTML(cost.resource)}</th><td class="number">${formatNumber(cost.original)}</td><td class="number">${formatNumber(cost.reduced)}</td></tr>`).join('');
   return `<table class="cost-table"><thead><tr><th scope="col">Resource / material</th><th scope="col" class="number">Original</th><th scope="col" class="number">Reduced</th></tr></thead><tbody>${rows || '<tr><td colspan="3" class="empty">No remaining costs.</td></tr>'}</tbody></table>`;
 }
@@ -108,11 +108,19 @@ function goalCard(goal, combinedById, resources) {
   return `<article class="goal" aria-label="${escapeHTML(item.name)}"><div class="goal-row"><div class="goal-name"><small>${escapeHTML(item.tree)}</small><strong>${escapeHTML(item.name)}</strong></div><label><span class="field-label">Current level</span><input type="number" min="0" max="${item.maxLevel}" step="1" inputmode="numeric" value="${current}" data-current="${item.id}" data-focus="current-${item.id}" aria-label="Current level for ${escapeHTML(item.name)}"></label><label><span class="field-label">Desired level</span><input type="number" min="1" max="${item.maxLevel}" step="1" inputmode="numeric" value="${goal.level}" data-desired="${item.id}" data-focus="desired-${item.id}" aria-label="Desired level for ${escapeHTML(item.name)}"></label><div class="goal-stat"><span class="field-label">Stat gain</span>${gains}</div><div class="goal-maester"><span class="field-label">Maester</span>${item.maester[goal.level-1]}</div><button class="button remove" data-remove="${item.id}" aria-label="Remove ${escapeHTML(item.name)}">Remove</button></div>${current >= goal.level ? '<p class="requirement-note good">Desired level already achieved.</p>' : ''}${extra}${requiredList(goal, combinedById)}<details class="disclosure" data-disclosure="costs-${goal.id}"><summary>Research cost breakdown</summary><div class="details-content"><p class="muted">Selected research and its unmet prerequisites. Shared costs also shown here are counted only once in combined totals.</p>${costTable(ownPlan, resources)}</div></details></article>`;
 }
 function renderAdjustments(preserveEditing) {
-  const row = resource => `<tr><th scope="row">${escapeHTML(resource)}</th><td><input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${state.efficiencies[resource] || 0}" data-efficiency="${escapeHTML(resource)}" data-focus="efficiency-${escapeHTML(resource)}" aria-label="${escapeHTML(resource)} efficiency percent" aria-describedby="boost-format-help"></td><td><input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${state.reductions[resource] || 0}" data-reduction="${escapeHTML(resource)}" data-focus="reduction-${escapeHTML(resource)}" aria-label="${escapeHTML(resource)} reduction percent" aria-describedby="boost-format-help"></td></tr>`;
+  const profile = state.boosts[state.boostTree];
+  for (const button of byId('boost-tabs').querySelectorAll('[data-boost-tree]')) {
+    const selected = button.dataset.boostTree === state.boostTree;
+    button.setAttribute('aria-selected', String(selected));
+    button.tabIndex = selected ? 0 : -1;
+    if (selected) byId('boost-panel').setAttribute('aria-labelledby', button.id);
+  }
+  byId('boost-scope-note').textContent = `Boosts apply only to ${state.boostTree === 'Military III' ? 'Military 3' : state.boostTree} research.`;
+  const row = resource => `<tr><th scope="row">${escapeHTML(resource)}</th><td><input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${profile.efficiencies[resource] || 0}" data-efficiency="${escapeHTML(resource)}" data-focus="efficiency-${escapeHTML(state.boostTree)}-${escapeHTML(resource)}" aria-label="${escapeHTML(resource)} efficiency percent" aria-describedby="boost-format-help"></td><td><input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${profile.reductions[resource] || 0}" data-reduction="${escapeHTML(resource)}" data-focus="reduction-${escapeHTML(state.boostTree)}-${escapeHTML(resource)}" aria-label="${escapeHTML(resource)} reduction percent" aria-describedby="boost-format-help"></td></tr>`;
   renderHTML(byId('resource-adjustments'), BASE_RESOURCES.map(row).join(''), preserveEditing);
-  // Keep every material editable even when a selection changes trees.
-  renderHTML(byId('material-adjustments-body'), data.resources.filter(resource => !BASE_RESOURCES.includes(resource)).map(row).join(''), preserveEditing);
-  if (!preserveEditing || document.activeElement !== byId('shared-efficiency')) byId('shared-efficiency').value = state.sharedEfficiency;
+  // Each tree exposes only its applicable materials.
+  renderHTML(byId('material-adjustments-body'), resourcesForTree(data.resources, state.boostTree).filter(resource => !BASE_RESOURCES.includes(resource)).map(row).join(''), preserveEditing);
+  if (!preserveEditing || document.activeElement !== byId('shared-efficiency')) byId('shared-efficiency').value = profile.sharedEfficiency;
 }
 function renderCalculator(preserveEditing = false) {
   const activeInput = document.activeElement;
@@ -131,7 +139,7 @@ function renderCalculator(preserveEditing = false) {
   byId('maester-level').value = state.maester;
   byId('maester-output').innerHTML = state.goals.length ? `<strong>Required level ${needed || '—'}</strong><span class="building-status ${needed > state.maester ? 'warning' : 'good'}">${needed ? needed > state.maester ? 'Upgrade needed' : 'Building requirement met' : 'No research levels remaining'}</span>` : '<span class="muted">Add research to see the requirement.</span>';
   byId('plan-summary').textContent = `${state.goals.length} selected · ${unfinished.length} research remaining · ${unfinished.reduce((sum,step)=>sum+step.missing.length,0)} levels remaining`;
-  const costs = calculateCosts(plan, resources, state.efficiencies, state.reductions, state.sharedEfficiency);
+  const costs = calculateTreeCosts(plan, resources, state.boosts);
   byId('cost-body').innerHTML = costs.map(cost => `<tr><th scope="row">${escapeHTML(cost.resource)}</th><td class="number">${formatNumber(cost.original)}</td><td class="number">${formatNumber(cost.reduced)}</td></tr>`).join('');
   const selected = new Set(state.goals.map(goal => goal.id));
   byId('combined-costs').innerHTML = unfinished.map(step => `<section class="breakdown-item"><h3>${escapeHTML(step.item.name)} <small>${step.current} → ${step.desired} · ${selected.has(step.item.id) ? 'Selected research' : 'Requirement'}</small></h3>${costTable([step], resources)}</section>`).join('') || '<p class="muted">No remaining costs.</p>';
@@ -209,13 +217,34 @@ function bind() {
   for(const type of ['input','change']){
     byId('maester-level').addEventListener(type,editMaester);
   }
+  const selectBoostTree = tree => {
+    if (!RESEARCH_TREES.includes(tree) || tree === state.boostTree) return;
+    // Finish pending decimal edits before switching the shared input to another profile.
+    if (byId('boost-panel').contains(document.activeElement)) document.activeElement.blur();
+    commit({...state, boostTree:tree});
+  };
+  byId('boost-tabs').addEventListener('click', event => {
+    const button = event.target.closest('[data-boost-tree]');
+    if (button) selectBoostTree(button.dataset.boostTree);
+  });
+  byId('boost-tabs').addEventListener('keydown', event => {
+    const button = event.target.closest('[data-boost-tree]');
+    if (!button || !['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+    event.preventDefault();
+    const buttons = [...byId('boost-tabs').querySelectorAll('[data-boost-tree]')];
+    const index = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1
+      : (buttons.indexOf(button) + (event.key === 'ArrowRight' ? 1 : -1) + buttons.length) % buttons.length;
+    selectBoostTree(buttons[index].dataset.boostTree);
+    buttons[index].focus({preventScroll:true});
+  });
   const editAdjustment=event=>{
     const input=event.target;
     const shared = input.id === 'shared-efficiency';
     const field = input.dataset.efficiency ? 'efficiencies' : input.dataset.reduction ? 'reductions' : null;
     if (!shared && !field) return;
     const resource = input.dataset.efficiency || input.dataset.reduction;
-    const saved = shared ? state.sharedEfficiency : state[field][resource] || 0;
+    const profile = state.boosts[state.boostTree];
+    const saved = shared ? profile.sharedEfficiency : profile[field][resource] || 0;
     const parsed = parseBoostInput(input.value);
     if (parsed === null) {
       // Keep empty or partial decimals editable without changing the stored value.
@@ -230,7 +259,8 @@ function bind() {
     const value = boundedNumber(parsed ?? (input.value === '0' ? 0 : saved), 0, field === 'reductions' ? 100 : Number.MAX_SAFE_INTEGER);
     if (event.type === 'change' || value !== parsed) input.value = String(value);
     if (value === saved) return;
-    commit(shared ? {...state, sharedEfficiency:value} : {...state, [field]:{...state[field], [resource]:value}}, true);
+    const updated = shared ? {...profile, sharedEfficiency:value} : {...profile, [field]:{...profile[field], [resource]:value}};
+    commit({...state, boosts:{...state.boosts, [state.boostTree]:updated}}, true);
   };
   byId('adjustments').addEventListener('input',editAdjustment);
   byId('adjustments').addEventListener('change',editAdjustment);

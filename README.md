@@ -26,7 +26,7 @@ To test on a phone, connect it to the same Wi-Fi network and open `http://COMPUT
 - Reset opens a confirmation dialog. Confirming clears selected research and all boosts, while retaining recorded research levels and the Maester level. Cancel leaves the calculation unchanged.
 - The combined Maester requirement is the maximum building level for unfinished research ranks. Each selected research also shows the building level for its desired rank. Building upgrade costs are not included.
 - Original and reduced resource/material costs appear together. Expand individual or combined breakdowns to trace costs. Combined stat gains include unfinished prerequisites, counted once.
-- Cost adjustments are above the totals on mobile, and beside the calculation on desktop. Material adjustments expand separately. All boost inputs are available regardless of the selected tree.
+- Cost adjustments are above the totals on mobile, and beside the calculation on desktop. Material adjustments expand separately. Military 3 and Dragon Combat have separate boost tabs. Each set applies only to its own tree, including prerequisites. Military 3 excludes Dragon Lore, Dragon Secrets, and Dragon Tomes; Dragon Combat includes all materials. Existing saved common boosts are copied to both tabs on upgrade, then can be edited independently.
 - Boosts accept either decimal separator, for example `24.22` or `24,22`, including `.5` or `,5`. Partial input and cursor position are retained while typing. Values save as numbers; leaving the field normalizes its display. Reductions remain capped at 100%.
 - Help explains the workflow. Stat gains retains the full level 0–15 property data and troop filters.
 
@@ -38,4 +38,4 @@ For Food, Wood, Stone, and Iron, total efficiency adds Research Resource Efficie
 
 Progress saves automatically in the browser's local storage, separately for each browser profile and site origin. There is no account or automatic synchronization between devices. Use **Backup → Export progress** before clearing site data or moving to another browser, device, or hosting URL. Import replaces the current profile.
 
-The calculator retains the original storage key and migrates the previous interface's saved goals, levels, Maester level, boosts, and undo history. Version 1 backups from Conquest Research Atlas and the renamed planner remain supported.
+The calculator retains the original storage key and migrates the previous interface's saved goals, levels, Maester level, boosts, and undo history. Version 1 and 2 backups from Conquest Research Atlas and the renamed planner remain supported.

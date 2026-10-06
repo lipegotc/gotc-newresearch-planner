@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { buildPlan, buildMultiPlan, calculateCosts, valueAt } from "./web/model.mjs";
+import { buildPlan, buildMultiPlan, calculateCosts, calculateTreeCosts, valueAt } from "./web/model.mjs";
 import { normalizeProgress, toggleRequirement, setCompletedLevel, resetCalculation, parseBoostInput } from "./web/progress.mjs";
 
 const data = JSON.parse(readFileSync(new URL("./web/data/research.json", import.meta.url), "utf8"));
@@ -84,19 +84,19 @@ const migrated = normalizeProgress({ tab: "tree", target: defense.id, desired: 5
 assert.equal(migrated.tab, "calculator");
 assert.deepEqual(migrated.goals, [{ id: defense.id, level: 5 }]);
 assert.equal(migrated.levels[defense.id], 2);
-assert.equal(migrated.efficiencies.Food, 72);
-assert.equal(migrated.sharedEfficiency, 149);
+assert.equal(migrated.boosts["Military III"].efficiencies.Food, 72);
+assert.equal(migrated.boosts["Military III"].sharedEfficiency, 149);
 const legacyBackup = JSON.parse(readFileSync(new URL("./test-fixtures/legacy-progress.json", import.meta.url), "utf8"));
 const imported = normalizeProgress(legacyBackup.progress, data.research, data.resources);
 assert.equal(imported.goals[0].level, 5);
 assert.equal(imported.levels[imported.goals[0].id], 2);
-assert.equal(imported.reductions.Food, 24.22);
-assert.equal(imported.efficiencies.Food, 12.5);
+assert.equal(imported.boosts["Military III"].reductions.Food, 24.22);
+assert.equal(imported.boosts["Military III"].efficiencies.Food, 12.5);
 const reset = normalizeProgress(JSON.parse(JSON.stringify(resetCalculation(imported))), data.research, data.resources);
 assert.deepEqual(reset.goals, []);
-assert.deepEqual(reset.efficiencies, {});
-assert.deepEqual(reset.reductions, {});
-assert.equal(reset.sharedEfficiency, 0);
+assert.deepEqual(reset.boosts["Military III"].efficiencies, {});
+assert.deepEqual(reset.boosts["Military III"].reductions, {});
+assert.equal(reset.boosts["Military III"].sharedEfficiency, 0);
 assert.deepEqual(reset.levels, imported.levels);
 assert.equal(reset.maester, imported.maester);
 assert.equal(imported.goals.length, 1, "reset must not mutate the existing profile");
@@ -105,8 +105,8 @@ assert.equal(invalid.goals.length, 1);
 assert.equal(invalid.goals[0].level, 15);
 assert.equal(invalid.levels[defense.id], 0);
 assert.equal(invalid.levels.bad, undefined);
-assert.equal(invalid.reductions.Food, 100);
-assert.equal(invalid.efficiencies.Food, 0);
+assert.equal(invalid.boosts["Military III"].reductions.Food, 100);
+assert.equal(invalid.boosts["Military III"].efficiencies.Food, 0);
 assert.equal(invalid.maester, 40);
 
 for (const [text, expected] of [["24.22",24.22],["24,22",24.22],[".5",0.5],[",5",0.5],["72.",72],["72,",72],["0.005",0.005],[" 12,5 ",12.5]]) {
@@ -117,3 +117,41 @@ const decimalCosts = calculateCosts(firstPlan, ["Food"], {Food:parseBoostInput("
 assert.equal(decimalCosts[0].reduced, first.costs.Food[0] * (1 - 24.22 / 100) / (1 + (12.5 + 60.5) / 100));
 
 console.log("Data integrity, calculator, requirement, and saved-progress checks passed for all 83 researches.");
+
+// Different tree boosts must apply to prerequisites and goals before totals are added.
+const treeProfile = normalizeProgress({schemaVersion:3, boostTree:"Dragon Combat", boosts:{
+  "Military III":{efficiencies:{Food:25, "Dragon Lore":99}, reductions:{Food:20}, sharedEfficiency:75},
+  "Dragon Combat":{efficiencies:{Food:50,"Dragon Lore":100}, reductions:{Food:10,"Dragon Lore":25}, sharedEfficiency:0}
+}}, data.research, data.resources);
+assert.equal(treeProfile.boosts["Military III"].efficiencies["Dragon Lore"], undefined);
+assert.equal(treeProfile.boosts["Dragon Combat"].efficiencies["Dragon Lore"], 100);
+const treeTotals = calculateTreeCosts(bothTrees, data.resources, treeProfile.boosts);
+for (const cost of treeTotals) {
+  let expected = 0;
+  let original = 0;
+  for (const tree of ["Military III","Dragon Combat"]) {
+    const profile = treeProfile.boosts[tree];
+    const separate = calculateCosts(bothTrees.filter(step=>step.item.tree===tree), [cost.resource], profile.efficiencies, profile.reductions, profile.sharedEfficiency)[0];
+    expected += separate.reduced;
+    original += separate.original;
+  }
+  assert.equal(cost.reduced, expected);
+  assert.equal(cost.original, original);
+}
+const militaryOriginal = calculateCosts(bothTrees.filter(step=>step.item.tree==="Military III"),["Food"])[0].original;
+const dragonOriginal = calculateCosts(bothTrees.filter(step=>step.item.tree==="Dragon Combat"),["Food"])[0].original;
+assert.equal(treeTotals.find(cost=>cost.resource==="Food").reduced, militaryOriginal*0.8/2+dragonOriginal*0.9/1.5);
+assert.deepEqual(normalizeProgress(JSON.parse(JSON.stringify(treeProfile)), data.research, data.resources), treeProfile);
+const updatedDragon = {...treeProfile.boosts, "Dragon Combat":{...treeProfile.boosts["Dragon Combat"], reductions:{Food:100}}};
+assert.equal(calculateTreeCosts(bothTrees,["Food"],updatedDragon)[0].reduced, militaryOriginal*0.8/2);
+for (const tree of ["Military III","Dragon Combat"]) {
+  assert.equal(imported.boosts[tree].reductions.Food,24.22);
+  assert.deepEqual(resetCalculation(treeProfile).boosts[tree], {efficiencies:{},reductions:{},sharedEfficiency:0});
+}
+assert.notEqual(imported.boosts["Military III"].efficiencies, imported.boosts["Dragon Combat"].efficiencies);
+const v2 = normalizeProgress({schemaVersion:2,tab:"help", efficiencies:{"Dragon Lore":30},sharedEfficiency:50},data.research,data.resources);
+assert.equal(v2.tab,"help");
+assert.equal(v2.boosts["Military III"].efficiencies["Dragon Lore"],undefined);
+assert.equal(v2.boosts["Dragon Combat"].efficiencies["Dragon Lore"],30);
+assert.equal(normalizeProgress({schemaVersion:3, efficiencies:{Food:99}},data.research,data.resources).boosts["Military III"].efficiencies.Food,undefined);
+console.log("Separate tree boosts, mixed-tree costs, migration, persistence, and reset checks passed.");
