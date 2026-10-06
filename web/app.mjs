@@ -1,5 +1,5 @@
-import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, formatNumber, formatStat, valueAt } from './model.mjs?v=tree-boosts-1';
-import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=tree-boosts-1';
+import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, formatNumber, formatStat, valueAt, researchReference } from './model.mjs?v=reference-costs-1';
+import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=reference-costs-1';
 
 const byId = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -168,22 +168,21 @@ function renderPicker() {
   }).join('') || '<p class="empty">No matching research.</p>';
 }
 function renderStats() {
-  const tree = byId('stats-tree').value;
-  const scope = byId('stats-scope').value;
-  const query = byId('stats-search').value.trim().toLowerCase();
-  const records=[];
-  for (const item of data.research) {
-    if (tree !== 'all' && item.tree !== tree) continue;
-    for (const property of item.properties) {
-      if (scope !== 'all' && property.scope !== scope && property.scope !== 'Shared') continue;
-      if (!`${item.name} ${property.name}`.toLowerCase().includes(query)) continue;
-      for (let level=0;level<=item.maxLevel;level++) records.push({item,property,level});
-    }
+  const tree = state.referenceTree;
+  for (const button of byId('reference-tabs').querySelectorAll('[data-reference-tree]')) {
+    const selected = button.dataset.referenceTree === tree;
+    button.setAttribute('aria-selected', String(selected));
+    button.tabIndex = selected ? 0 : -1;
+    if (selected) byId('reference-panel').setAttribute('aria-labelledby', button.id);
   }
-  byId('stats-body').innerHTML = records.slice(0,statsLimit).map(({item,property,level})=>`<tr><td>${escapeHTML(item.tree)}</td><th scope="row">${escapeHTML(item.name)}</th><td>${escapeHTML(property.name)}</td><td>${escapeHTML(property.scope)}</td><td>${level}</td><td class="number">${formatStat(valueAt(property.values,level),property.unit)}</td><td class="number">+${formatStat(valueAt(property.values,level)-valueAt(property.values,level-1),property.unit)}</td><td>${level ? item.maester[level-1] : '—'}</td></tr>`).join('') || '<tr><td colspan="8" class="empty">No matching stat levels.</td></tr>';
-  byId('stats-count').textContent = `Showing ${Math.min(statsLimit,records.length)} of ${formatNumber(records.length)} levels`;
-  byId('stats-more').hidden = statsLimit >= records.length;
+  const {materials, rows} = researchReference(data.research, data.resources, tree, byId('stats-scope').value, byId('stats-search').value);
+  byId('reference-caption').textContent = `${tree === 'Military III' ? 'Military 3' : tree} · Original costs per level`;
+  byId('stats-head').innerHTML = `<tr><th scope="col">Research</th><th scope="col">Stat / scope</th><th scope="col">Level</th><th scope="col" class="number">Cumulative stat</th><th scope="col" class="number">Level gain</th><th scope="col">Maester</th>${materials.map(resource=>`<th scope="col" class="number">${escapeHTML(resource)}</th>`).join('')}</tr>`;
+  byId('stats-body').innerHTML = rows.slice(0,statsLimit).map(({item,property,level,cumulative,gain,costs})=>`<tr><th scope="row">${escapeHTML(item.name)}</th><td>${escapeHTML(property.name)}<small>${escapeHTML(property.scope)}</small></td><td>${level}</td><td class="number">${formatStat(cumulative,property.unit)}</td><td class="number">+${formatStat(gain,property.unit)}</td><td>${level ? item.maester[level-1] : '—'}</td>${costs.map(cost=>`<td class="number">${formatNumber(cost)}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${6+materials.length}" class="empty">No matching research levels.</td></tr>`;
+  byId('stats-count').textContent = `Showing ${Math.min(statsLimit,rows.length)} of ${formatNumber(rows.length)} levels`;
+  byId('stats-more').hidden = statsLimit >= rows.length;
 }
+
 function bind() {
   const resetDialog = byId('reset-dialog');
   byId('reset-button').addEventListener('click', () => {
@@ -267,7 +266,29 @@ function bind() {
   byId('open-picker').addEventListener('click',()=>{byId('picker-search').value='';renderPicker();byId('picker-dialog').showModal();});
   byId('picker-tree').addEventListener('change',renderPicker);
   byId('picker-search').addEventListener('input',renderPicker);
-  for(const id of ['stats-tree','stats-scope','stats-search'])byId(id).addEventListener('input',()=>{statsLimit=60;renderStats();});
+  for(const id of ['stats-scope','stats-search'])byId(id).addEventListener('input',()=>{statsLimit=60;renderStats();});
+  const selectReferenceTree = tree => {
+    if (!RESEARCH_TREES.includes(tree) || tree === state.referenceTree) return;
+    state = {...state, referenceTree:tree};
+    statsLimit = 60;
+    save();
+    renderStats();
+    byId('reference-panel').querySelector('.table-scroll').scrollLeft = 0;
+  };
+  byId('reference-tabs').addEventListener('click', event => {
+    const button = event.target.closest('[data-reference-tree]');
+    if (button) selectReferenceTree(button.dataset.referenceTree);
+  });
+  byId('reference-tabs').addEventListener('keydown', event => {
+    const button = event.target.closest('[data-reference-tree]');
+    if (!button || !['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+    event.preventDefault();
+    const buttons = [...byId('reference-tabs').querySelectorAll('[data-reference-tree]')];
+    const index = event.key === 'Home' ? 0 : event.key === 'End' ? buttons.length - 1
+      : (buttons.indexOf(button) + (event.key === 'ArrowRight' ? 1 : -1) + buttons.length) % buttons.length;
+    selectReferenceTree(buttons[index].dataset.referenceTree);
+    buttons[index].focus({preventScroll:true});
+  });
   byId('stats-more').addEventListener('click',()=>{statsLimit+=60;renderStats();});
   byId('backup-button').addEventListener('click',()=>{byId('backup-message').textContent='';byId('backup-dialog').showModal();});
   byId('import-button').addEventListener('click',()=>byId('import-file').click());

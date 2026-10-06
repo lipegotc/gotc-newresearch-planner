@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { buildPlan, buildMultiPlan, calculateCosts, calculateTreeCosts, valueAt } from "./web/model.mjs";
+import { buildPlan, buildMultiPlan, calculateCosts, calculateTreeCosts, valueAt, researchReference } from "./web/model.mjs";
 import { normalizeProgress, toggleRequirement, setCompletedLevel, resetCalculation, parseBoostInput } from "./web/progress.mjs";
 
 const data = JSON.parse(readFileSync(new URL("./web/data/research.json", import.meta.url), "utf8"));
@@ -155,3 +155,22 @@ assert.equal(v2.boosts["Military III"].efficiencies["Dragon Lore"],undefined);
 assert.equal(v2.boosts["Dragon Combat"].efficiencies["Dragon Lore"],30);
 assert.equal(normalizeProgress({schemaVersion:3, efficiencies:{Food:99}},data.research,data.resources).boosts["Military III"].efficiencies.Food,undefined);
 console.log("Separate tree boosts, mixed-tree costs, migration, persistence, and reset checks passed.");
+
+for (const tree of ['Military III','Dragon Combat']) {
+  const reference = researchReference(data.research,data.resources,tree);
+  assert.equal(reference.rows.length,data.research.filter(item=>item.tree===tree).length*16);
+  for (const row of reference.rows) {
+    assert.equal(row.cumulative, row.level ? row.property.values[row.level-1] : 0);
+    assert.equal(row.gain, row.cumulative-(row.level>1 ? row.property.values[row.level-2] : 0));
+    reference.materials.forEach((resource,index)=>assert.equal(row.costs[index],row.level ? row.item.costs[resource]?.[row.level-1]||0 : 0));
+  }
+  assert.equal(reference.materials.includes('Dragon Tomes'),tree==='Dragon Combat');
+  assert.equal(reference.materials.includes('Dragon Lore'),tree==='Dragon Combat');
+  assert.equal(reference.materials.includes('Dragon Secrets'),tree==='Dragon Combat');
+}
+const filteredReference = researchReference(data.research,data.resources,'Military III','Infantry','attack');
+assert.ok(filteredReference.rows.length>0);
+assert.ok(filteredReference.rows.every(row=>['Infantry','Shared'].includes(row.property.scope)));
+assert.equal(researchReference(data.research,data.resources,'Dragon Combat','all','no such research').rows.length,0);
+assert.equal(normalizeProgress({referenceTree:'Dragon Combat'},data.research,data.resources).referenceTree,'Dragon Combat');
+console.log('Reference level costs, stat gains, tree materials, and filter checks passed.');

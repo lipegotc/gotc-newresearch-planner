@@ -84,3 +84,24 @@ export function formatNumber(number, digits = 0) {
 export function formatStat(value, unit) {
   return unit === "count" ? formatNumber(value) : `${(value * 100).toFixed(2)}%`;
 }
+
+// The reference uses source level costs directly, never a prerequisite plan or discounts.
+export function researchReference(research, resources, tree, scope = 'all', query = '') {
+  const search = query.trim().toLowerCase();
+  const items = research.filter(item => item.tree === tree);
+  const materials = resources.filter(resource => items.some(item => item.costs[resource]?.some(cost => cost > 0)));
+  const rows = [];
+  for (const item of items) {
+    for (const property of item.properties) {
+      if (scope !== 'all' && property.scope !== scope && property.scope !== 'Shared') continue;
+      if (!`${item.name} ${property.name}`.toLowerCase().includes(search)) continue;
+      for (let level = 0; level <= item.maxLevel; level++) rows.push({
+        item, property, level,
+        cumulative: valueAt(property.values, level),
+        gain: valueAt(property.values, level) - valueAt(property.values, level - 1),
+        costs: materials.map(resource => level ? Number(item.costs[resource]?.[level - 1] || 0) : 0),
+      });
+    }
+  }
+  return { materials, rows };
+}

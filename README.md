@@ -28,7 +28,7 @@ To test on a phone, connect it to the same Wi-Fi network and open `http://COMPUT
 - Original and reduced resource/material costs appear together. Expand individual or combined breakdowns to trace costs. Combined stat gains include unfinished prerequisites, counted once.
 - Cost adjustments are above the totals on mobile, and beside the calculation on desktop. Material adjustments expand separately. Military 3 and Dragon Combat have separate boost tabs. Each set applies only to its own tree, including prerequisites. Military 3 excludes Dragon Lore, Dragon Secrets, and Dragon Tomes; Dragon Combat includes all materials. Existing saved common boosts are copied to both tabs on upgrade, then can be edited independently.
 - Boosts accept either decimal separator, for example `24.22` or `24,22`, including `.5` or `,5`. Partial input and cursor position are retained while typing. Values save as numbers; leaving the field normalizes its display. Reductions remain capped at 100%.
-- Help explains the workflow. Stat gains retains the full level 0–15 property data and troop filters.
+- Help explains the workflow. Gains/Costs Reference has Military 3 and Dragon Combat submenus with level 0-15 stats, troop filters, and original costs for each individual research level and resource/material. Costs exclude boosts and prerequisites. Scroll the table horizontally to see all costs on smaller screens.
 
 Reduced cost = original cost × (1 − reduction / 100) ÷ (1 + total efficiency / 100).
 

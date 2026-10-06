@@ -9,3 +9,5 @@
 .brand-block{min-width:0;max-width:760px}.brand-block .brand{display:block}.creator-contact{margin:6px 0 0;color:var(--muted);font-size:11px;line-height:1.6;overflow-wrap:anywhere}
 
 .boost-tabs{display:flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:8px;margin-bottom:12px}.boost-tabs button{flex:1;min-width:0;padding:10px 6px;border:0;border-radius:5px;background:transparent;color:inherit;font:inherit;cursor:pointer}.boost-tabs button[aria-selected="true"]{background:#263548;color:#fff}.boost-tabs button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.reference-tabs{max-width:420px}.reference-table{min-width:1550px!important}.reference-table caption{text-align:left;color:var(--muted);font-size:12px;padding:0 0 12px}.reference-table th:first-child{min-width:210px}.reference-table td small{display:block;color:var(--muted);font-size:10px}.reference-table thead th{white-space:normal;min-width:95px}.reference-scroll:focus-visible{outline:2px solid var(--gold);outline-offset:3px}@media(max-width:600px){.primary-nav{gap:14px}.nav-button{font-size:12px}.reference-tabs{max-width:none}}

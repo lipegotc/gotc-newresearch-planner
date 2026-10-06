@@ -58,6 +58,7 @@ export function normalizeProgress(raw, research, resources) {
     goals: [...goals].map(([id, level]) => ({ id, level })), levels, markHistory,
     maester: boundedNumber(input.maester ?? 1, 1, 40, true),
     boosts,
+    referenceTree: RESEARCH_TREES.includes(input.referenceTree) ? input.referenceTree : "Military III",
     boostTree: RESEARCH_TREES.includes(input.boostTree) ? input.boostTree : "Military III",
   };
 }
