@@ -95,7 +95,7 @@ export function researchReference(research, resources, tree, scope = 'all', quer
     for (const property of item.properties) {
       if (scope !== 'all' && property.scope !== scope && property.scope !== 'Shared') continue;
       if (!`${item.name} ${property.name}`.toLowerCase().includes(search)) continue;
-      for (let level = 0; level <= item.maxLevel; level++) rows.push({
+      for (let level = 1; level <= item.maxLevel; level++) rows.push({
         item, property, level,
         cumulative: valueAt(property.values, level),
         gain: valueAt(property.values, level) - valueAt(property.values, level - 1),
@@ -104,4 +104,20 @@ export function researchReference(research, resources, tree, scope = 'all', quer
     }
   }
   return { materials, rows };
+}
+
+// Max the selected troop scope and shared research, then add only the minimum
+// ranks of other research needed to unlock them. This reference starts at zero.
+export function referenceTotals(research, resources, tree, scope = 'all') {
+  const goals = research.filter(item => item.tree === tree && item.properties.some(property =>
+    scope === 'all' || property.scope === scope || property.scope === 'Shared'))
+    .map(item => ({id:item.id, level:item.maxLevel}));
+  const plan = buildMultiPlan(research, goals);
+  const selected = new Set(goals.map(goal => goal.id));
+  return {
+    goals, plan,
+    prerequisites: plan.filter(step => !selected.has(step.item.id)),
+    costs: calculateCosts(plan, resources),
+    maester: Math.max(0, ...plan.map(step => step.maesterNeeded)),
+  };
 }

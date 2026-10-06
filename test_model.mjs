@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { buildPlan, buildMultiPlan, calculateCosts, calculateTreeCosts, valueAt, researchReference } from "./web/model.mjs";
+import { buildPlan, buildMultiPlan, calculateCosts, calculateTreeCosts, valueAt, researchReference, referenceTotals } from "./web/model.mjs";
 import { normalizeProgress, toggleRequirement, setCompletedLevel, resetCalculation, parseBoostInput } from "./web/progress.mjs";
 
 const data = JSON.parse(readFileSync(new URL("./web/data/research.json", import.meta.url), "utf8"));
@@ -158,7 +158,7 @@ console.log("Separate tree boosts, mixed-tree costs, migration, persistence, and
 
 for (const tree of ['Military III','Dragon Combat']) {
   const reference = researchReference(data.research,data.resources,tree);
-  assert.equal(reference.rows.length,data.research.filter(item=>item.tree===tree).length*16);
+  assert.equal(reference.rows.length,data.research.filter(item=>item.tree===tree).length*15);
   for (const row of reference.rows) {
     assert.equal(row.cumulative, row.level ? row.property.values[row.level-1] : 0);
     assert.equal(row.gain, row.cumulative-(row.level>1 ? row.property.values[row.level-2] : 0));
@@ -174,3 +174,28 @@ assert.ok(filteredReference.rows.every(row=>['Infantry','Shared'].includes(row.p
 assert.equal(researchReference(data.research,data.resources,'Dragon Combat','all','no such research').rows.length,0);
 assert.equal(normalizeProgress({referenceTree:'Dragon Combat'},data.research,data.resources).referenceTree,'Dragon Combat');
 console.log('Reference level costs, stat gains, tree materials, and filter checks passed.');
+
+// Full-tree totals equal every original rank exactly once.
+for (const tree of ['Military III','Dragon Combat']) {
+  const all = referenceTotals(data.research,data.resources,tree);
+  assert.equal(all.prerequisites.length,0);
+  for (const cost of all.costs) assert.equal(cost.original,data.research.filter(item=>item.tree===tree)
+    .reduce((sum,item)=>sum+(item.costs[cost.resource]||[]).reduce((a,b)=>a+b,0),0));
+  for (const scope of ['Infantry','Cavalry','Ranged','Shared']) {
+    const total = referenceTotals(data.research,data.resources,tree,scope);
+    assert.equal(new Set(total.plan.map(step=>step.item.id)).size,total.plan.length);
+    assert.ok(total.goals.every(goal=>data.research.find(item=>item.id===goal.id).properties.some(prop=>prop.scope===scope||prop.scope==='Shared')));
+    assert.ok(total.plan.some(step=>step.item.name.includes('March Size')&&step.desired===15));
+    for (const step of total.plan) for (const req of step.item.requires) assert.ok(total.plan.find(other=>other.item.id===req.id).desired>=req.level);
+  }
+}
+const scopeFixture = [sample('unlock'),sample('infantry',[{id:'unlock',level:4}]),sample('march',[{id:'unlock',level:2}])];
+scopeFixture[0].properties[0].scope='Cavalry';
+scopeFixture[1].properties[0].scope='Infantry';
+scopeFixture[2].properties[0].scope='Shared';
+const scopedTotal=referenceTotals(scopeFixture,['Food'],'Military III','Infantry');
+assert.deepEqual(scopedTotal.goals.map(goal=>goal.id),['infantry','march']);
+assert.equal(scopedTotal.prerequisites[0].desired,4);
+assert.equal(scopedTotal.costs[0].original,340);
+assert.ok(researchReference(data.research,data.resources,'Military III').rows.every(row=>row.level>=1));
+console.log('Reference totals include shared research, march sizes, minimum prerequisites, and no duplicate costs.');

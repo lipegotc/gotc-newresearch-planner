@@ -1,5 +1,5 @@
-import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, formatNumber, formatStat, valueAt, researchReference } from './model.mjs?v=reference-costs-1';
-import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=reference-costs-1';
+import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, formatNumber, formatStat, valueAt, researchReference, referenceTotals } from './model.mjs?v=reference-totals-1';
+import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=reference-totals-1';
 
 const byId = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -176,6 +176,12 @@ function renderStats() {
     if (selected) byId('reference-panel').setAttribute('aria-labelledby', button.id);
   }
   const {materials, rows} = researchReference(data.research, data.resources, tree, byId('stats-scope').value, byId('stats-search').value);
+  const totals = referenceTotals(data.research, data.resources, tree, byId('stats-scope').value);
+  const scopeName = byId('stats-scope').value === 'all' ? 'All troop types + shared' : byId('stats-scope').value === 'Shared' ? 'Shared research' : `${byId('stats-scope').value} + shared`;
+  byId('reference-total-summary').textContent = `${scopeName}: ${totals.goals.length} research to maximum level, plus ${totals.prerequisites.length} prerequisite research at minimum required levels. Maester level ${totals.maester}.`;
+  byId('reference-total-costs').innerHTML = totals.costs.filter(cost=>cost.original).map(cost=>`<div class="reference-total-item"><span>${escapeHTML(cost.resource)}</span><strong>${formatNumber(cost.original)}</strong></div>`).join('');
+  byId('reference-total-requirements').hidden = !totals.prerequisites.length;
+  byId('reference-total-requirements-list').innerHTML = totals.prerequisites.map(step=>`<li>${escapeHTML(step.item.name)} <strong>Level ${step.desired}</strong></li>`).join('');
   byId('reference-caption').textContent = `${tree === 'Military III' ? 'Military 3' : tree} · Original costs per level`;
   byId('stats-head').innerHTML = `<tr><th scope="col">Research</th><th scope="col">Stat / scope</th><th scope="col">Level</th><th scope="col" class="number">Cumulative stat</th><th scope="col" class="number">Level gain</th><th scope="col">Maester</th>${materials.map(resource=>`<th scope="col" class="number">${escapeHTML(resource)}</th>`).join('')}</tr>`;
   byId('stats-body').innerHTML = rows.slice(0,statsLimit).map(({item,property,level,cumulative,gain,costs})=>`<tr><th scope="row">${escapeHTML(item.name)}</th><td>${escapeHTML(property.name)}<small>${escapeHTML(property.scope)}</small></td><td>${level}</td><td class="number">${formatStat(cumulative,property.unit)}</td><td class="number">+${formatStat(gain,property.unit)}</td><td>${level ? item.maester[level-1] : '—'}</td>${costs.map(cost=>`<td class="number">${formatNumber(cost)}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${6+materials.length}" class="empty">No matching research levels.</td></tr>`;
