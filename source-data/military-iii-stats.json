@@ -5,7 +5,7 @@
     "-5894738455932347469": [
       {
         "name": "Troop Attack",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.016,
@@ -30,7 +30,7 @@
     "2198672300928048439": [
       {
         "name": "Troop Defense",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.016,
@@ -55,7 +55,7 @@
     "-2656012788146329155": [
       {
         "name": "Troop Attack",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.024,
@@ -80,7 +80,7 @@
     "-7636246919942447440": [
       {
         "name": "Troop Health",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.012,
@@ -105,7 +105,7 @@
     "7751007378312228665": [
       {
         "name": "Troop Defense",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.017,
@@ -130,7 +130,7 @@
     "-2083824083537154882": [
       {
         "name": "Troop Health",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.01,
@@ -155,7 +155,7 @@
     "-7738213318256819884": [
       {
         "name": "Marcher Troop Attack vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.012,
@@ -180,7 +180,7 @@
     "7120981475823510849": [
       {
         "name": "Max March Size",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "count",
         "values": [
           92,
@@ -205,7 +205,7 @@
     "-9190505132307125515": [
       {
         "name": "Troop Defense vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.014,
@@ -230,7 +230,7 @@
     "9136837660805148406": [
       {
         "name": "Troop Attack vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.021,
@@ -255,7 +255,7 @@
     "2455549524139791139": [
       {
         "name": "Troop Health vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.009,
@@ -280,7 +280,7 @@
     "-763755216593479429": [
       {
         "name": "Troop Defense vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.021,
@@ -305,7 +305,7 @@
     "855347042154077432": [
       {
         "name": "Troop Attack vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.031,
@@ -330,7 +330,7 @@
     "6269434697169674541": [
       {
         "name": "Troop Health vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.014,
@@ -355,7 +355,7 @@
     "-2193803771968031910": [
       {
         "name": "Marcher Troop Attack vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.023,
@@ -380,7 +380,7 @@
     "1711528420106377039": [
       {
         "name": "Max March Size",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "count",
         "values": [
           185,
@@ -1305,7 +1305,7 @@
     "4265288870527911605": [
       {
         "name": "Max March Size",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "count",
         "values": [
           647,
@@ -1330,7 +1330,7 @@
     "-3638978107186240864": [
       {
         "name": "Marcher Troop Attack vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.081,

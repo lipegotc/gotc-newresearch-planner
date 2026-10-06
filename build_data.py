@@ -58,7 +58,7 @@ def main() -> None:
                 raise ValueError(f"No stat gains: {item['name']}")
             for prop in stats[research_id]:
                 validate_values(prop["values"], item["name"] + " " + prop["name"])
-                if prop["unit"] not in ("percent", "count") or prop["scope"] not in ("Shared", "Infantry", "Cavalry", "Ranged"):
+                if prop["unit"] not in ("percent", "count") or prop["scope"] not in ("General", "Infantry", "Cavalry", "Ranged"):
                     raise ValueError(f"Invalid stat unit or scope: {item['name']}")
                 properties.append({"name": prop["name"], "raw": prop["statId"],
                                    "scope": prop["scope"], "unit": prop["unit"], "values": prop["values"]})

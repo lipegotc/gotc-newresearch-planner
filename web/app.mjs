@@ -1,5 +1,5 @@
-import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, formatNumber, formatStat, valueAt, researchReference, referenceTotals } from './model.mjs?v=reference-totals-1';
-import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=reference-totals-1';
+import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, formatNumber, formatStat, valueAt, researchReference, referenceTotals } from './model.mjs?v=general-scope-1';
+import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=general-scope-1';
 
 const byId = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -177,7 +177,7 @@ function renderStats() {
   }
   const {materials, rows} = researchReference(data.research, data.resources, tree, byId('stats-scope').value, byId('stats-search').value);
   const totals = referenceTotals(data.research, data.resources, tree, byId('stats-scope').value);
-  const scopeName = byId('stats-scope').value === 'all' ? 'All troop types + shared' : byId('stats-scope').value === 'Shared' ? 'Shared research' : `${byId('stats-scope').value} + shared`;
+  const scopeName = byId('stats-scope').value === 'all' ? 'All troop types + General' : byId('stats-scope').value === 'General' ? 'General research' : `${byId('stats-scope').value} + General`;
   byId('reference-total-summary').textContent = `${scopeName}: ${totals.goals.length} research to maximum level, plus ${totals.prerequisites.length} prerequisite research at minimum required levels. Maester level ${totals.maester}.`;
   byId('reference-total-costs').innerHTML = totals.costs.filter(cost=>cost.original).map(cost=>`<div class="reference-total-item"><span>${escapeHTML(cost.resource)}</span><strong>${formatNumber(cost.original)}</strong></div>`).join('');
   byId('reference-total-requirements').hidden = !totals.prerequisites.length;
@@ -320,7 +320,7 @@ function bind() {
 }
 async function start(){
   try{
-    const response=await fetch('./data/research.json');if(!response.ok)throw new Error('Research data could not be loaded.');
+    const response=await fetch('./data/research.json?v=general-scope-1');if(!response.ok)throw new Error('Research data could not be loaded.');
     data=await response.json();byResearch=new Map(data.research.map(item=>[item.id,item]));
     state=readProgress();bind();renderTabs();renderCalculator();renderStats();save();
     if(location.hash.startsWith('#tutorial'))history.replaceState(null,'',location.pathname+location.search);

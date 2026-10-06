@@ -5,7 +5,7 @@
     "-3416572878383616946": [
       {
         "name": "Dragon Troop Attack",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.032,
@@ -30,7 +30,7 @@
     "-2511025654195867708": [
       {
         "name": "Dragon Troop Defense",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.025,
@@ -55,7 +55,7 @@
     "-1683551966442264243": [
       {
         "name": "Dragon Troop Health",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.01,
@@ -80,7 +80,7 @@
     "8887621896489032122": [
       {
         "name": "Dragon Troop Attack vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.01,
@@ -105,7 +105,7 @@
     "8606906134426131534": [
       {
         "name": "Dragon Troop Defense vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.028,
@@ -130,7 +130,7 @@
     "2848633687694550127": [
       {
         "name": "Dragon Troop Health vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.012,
@@ -155,7 +155,7 @@
     "-5847040328993203632": [
       {
         "name": "Dragon Max March Size",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "count",
         "values": [
           69,
@@ -180,7 +180,7 @@
     "2679639809498864913": [
       {
         "name": "Dragon Defense",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.012,
@@ -205,7 +205,7 @@
     "2444389987003212004": [
       {
         "name": "Dragon Attack vs. Dragon",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.023,
@@ -230,7 +230,7 @@
     "7677352344286571239": [
       {
         "name": "Dragon Marcher Troop Attack vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.017,
@@ -255,7 +255,7 @@
     "-6519037450134741440": [
       {
         "name": "Dragon Troop Attack",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.049,
@@ -280,7 +280,7 @@
     "-6326053810918203958": [
       {
         "name": "Dragon Troop Defense",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.038,
@@ -305,7 +305,7 @@
     "-7084005516825224381": [
       {
         "name": "Dragon Troop Health",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.014,
@@ -330,7 +330,7 @@
     "1028353354520308660": [
       {
         "name": "Dragon Troop Attack vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.021,
@@ -355,7 +355,7 @@
     "172125714884881984": [
       {
         "name": "Dragon Troop Defense vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.042,
@@ -380,7 +380,7 @@
     "5952137841819211361": [
       {
         "name": "Dragon Troop Health vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.016,
@@ -405,7 +405,7 @@
     "-2609414701942052770": [
       {
         "name": "Dragon Max March Size",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "count",
         "values": [
           139,
@@ -430,7 +430,7 @@
     "5781956572101553951": [
       {
         "name": "Dragon Defense",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.023,
@@ -455,7 +455,7 @@
     "6124450559747216106": [
       {
         "name": "Dragon Attack vs. Dragon",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.035,
@@ -480,7 +480,7 @@
     "2276907901400602857": [
       {
         "name": "Dragon Marcher Troop Attack vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.035,
@@ -505,7 +505,7 @@
     "2500828528016161358": [
       {
         "name": "Dragon Troop Attack vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.073,
@@ -605,7 +605,7 @@
     "-632557277938927196": [
       {
         "name": "Dragon Max March Size",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "count",
         "values": [
           486,
@@ -705,7 +705,7 @@
     "3704483417729009939": [
       {
         "name": "Dragon Marcher Troop Attack vs. Player",
-        "scope": "Shared",
+        "scope": "General",
         "unit": "percent",
         "values": [
           0.121,
