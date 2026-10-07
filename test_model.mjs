@@ -146,7 +146,7 @@ const updatedDragon = {...treeProfile.boosts, "Dragon Combat":{...treeProfile.bo
 assert.equal(calculateTreeCosts(bothTrees,["Food"],updatedDragon)[0].reduced, militaryOriginal*0.8/2);
 for (const tree of ["Military III","Dragon Combat"]) {
   assert.equal(imported.boosts[tree].reductions.Food,24.22);
-  assert.deepEqual(resetCalculation(treeProfile).boosts[tree], {efficiencies:{},reductions:{},sharedEfficiency:0});
+  assert.deepEqual(resetCalculation(treeProfile).boosts[tree], {efficiencies:{},reductions:{},sharedEfficiency:0,sharedReduction:0});
 }
 assert.notEqual(imported.boosts["Military III"].efficiencies, imported.boosts["Dragon Combat"].efficiencies);
 const v2 = normalizeProgress({schemaVersion:2,tab:"help", efficiencies:{"Dragon Lore":30},sharedEfficiency:50},data.research,data.resources);
@@ -199,3 +199,20 @@ assert.equal(scopedTotal.prerequisites[0].desired,4);
 assert.equal(scopedTotal.costs[0].original,340);
 assert.ok(researchReference(data.research,data.resources,'Military III').rows.every(row=>row.level>=1));
 console.log('Reference totals include General research, march sizes, minimum prerequisites, and no duplicate costs.');
+
+const reductionPlan=[{item:{tree:'Military III',costs:{Food:[1000],Wood:[1000],Stone:[1000],Iron:[1000],'Dragon Tomes':[1000]}},missing:[1]}];
+const reducedResources=calculateCosts(reductionPlan,['Food','Wood','Stone','Iron','Dragon Tomes'],{Food:20},{Food:10,'Dragon Tomes':10},30,25);
+assert.equal(reducedResources[0].reduced,1000*0.65/1.5);
+for (const cost of reducedResources.slice(1,4)) assert.equal(cost.reduced,1000*0.75/1.3);
+assert.equal(reducedResources[4].reduced,900);
+assert.equal(calculateCosts(reductionPlan,['Food'],{}, {Food:80},0,30)[0].reduced,0);
+const reducedProfile=normalizeProgress({schemaVersion:3,boosts:{'Military III':{sharedReduction:12.5},'Dragon Combat':{sharedReduction:35.25}}},data.research,data.resources);
+assert.deepEqual(normalizeProgress(JSON.parse(JSON.stringify(reducedProfile)),data.research,data.resources),reducedProfile);
+const mixedReductionPlan=[...reductionPlan,{...reductionPlan[0],item:{...reductionPlan[0].item,tree:'Dragon Combat'}}];
+assert.equal(calculateTreeCosts(mixedReductionPlan,['Food'],reducedProfile.boosts)[0].reduced,875+647.5);
+for (const tree of ['Military III','Dragon Combat']) {
+ assert.equal(imported.boosts[tree].sharedReduction,0);
+ assert.equal(resetCalculation(reducedProfile).boosts[tree].sharedReduction,0);
+}
+assert.equal(normalizeProgress({schemaVersion:3,boosts:{'Military III':{sharedReduction:999},'Dragon Combat':{sharedReduction:-5}}},data.research,data.resources).boosts['Military III'].sharedReduction,100);
+console.log('Research Resource Reduction: additive base resources, material exclusion, cap, tree isolation, backups, and reset passed.');

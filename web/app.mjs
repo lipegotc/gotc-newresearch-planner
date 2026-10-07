@@ -1,5 +1,5 @@
-import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, formatNumber, formatStat, valueAt, researchReference, referenceTotals } from './model.mjs?v=general-scope-1';
-import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=general-scope-1';
+import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, formatNumber, formatStat, valueAt, researchReference, referenceTotals } from './model.mjs?v=resource-reduction-1';
+import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=resource-reduction-1';
 
 const byId = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -120,7 +120,9 @@ function renderAdjustments(preserveEditing) {
   renderHTML(byId('resource-adjustments'), BASE_RESOURCES.map(row).join(''), preserveEditing);
   // Each tree exposes only its applicable materials.
   renderHTML(byId('material-adjustments-body'), resourcesForTree(data.resources, state.boostTree).filter(resource => !BASE_RESOURCES.includes(resource)).map(row).join(''), preserveEditing);
-  if (!preserveEditing || document.activeElement !== byId('shared-efficiency')) byId('shared-efficiency').value = profile.sharedEfficiency;
+  for (const [id, field] of [['shared-efficiency','sharedEfficiency'], ['shared-reduction','sharedReduction']]) {
+    if (!preserveEditing || document.activeElement !== byId(id)) byId(id).value = profile[field];
+  }
 }
 function renderCalculator(preserveEditing = false) {
   const activeInput = document.activeElement;
@@ -244,12 +246,12 @@ function bind() {
   });
   const editAdjustment=event=>{
     const input=event.target;
-    const shared = input.id === 'shared-efficiency';
+    const sharedField = input.id === 'shared-efficiency' ? 'sharedEfficiency' : input.id === 'shared-reduction' ? 'sharedReduction' : null;
     const field = input.dataset.efficiency ? 'efficiencies' : input.dataset.reduction ? 'reductions' : null;
-    if (!shared && !field) return;
+    if (!sharedField && !field) return;
     const resource = input.dataset.efficiency || input.dataset.reduction;
     const profile = state.boosts[state.boostTree];
-    const saved = shared ? profile.sharedEfficiency : profile[field][resource] || 0;
+    const saved = sharedField ? profile[sharedField] : profile[field][resource] || 0;
     const parsed = parseBoostInput(input.value);
     if (parsed === null) {
       // Keep empty or partial decimals editable without changing the stored value.
@@ -261,10 +263,10 @@ function bind() {
       input.value = input.value.trim() === '' ? '0' : String(saved);
     }
     input.removeAttribute('aria-invalid');
-    const value = boundedNumber(parsed ?? (input.value === '0' ? 0 : saved), 0, field === 'reductions' ? 100 : Number.MAX_SAFE_INTEGER);
+    const value = boundedNumber(parsed ?? (input.value === '0' ? 0 : saved), 0, field === 'reductions' || sharedField === 'sharedReduction' ? 100 : Number.MAX_SAFE_INTEGER);
     if (event.type === 'change' || value !== parsed) input.value = String(value);
     if (value === saved) return;
-    const updated = shared ? {...profile, sharedEfficiency:value} : {...profile, [field]:{...profile[field], [resource]:value}};
+    const updated = sharedField ? {...profile, [sharedField]:value} : {...profile, [field]:{...profile[field], [resource]:value}};
     commit({...state, boosts:{...state.boosts, [state.boostTree]:updated}}, true);
   };
   byId('adjustments').addEventListener('input',editAdjustment);
@@ -320,7 +322,7 @@ function bind() {
 }
 async function start(){
   try{
-    const response=await fetch('./data/research.json?v=general-scope-1');if(!response.ok)throw new Error('Research data could not be loaded.');
+    const response=await fetch('./data/research.json?v=resource-reduction-1');if(!response.ok)throw new Error('Research data could not be loaded.');
     data=await response.json();byResearch=new Map(data.research.map(item=>[item.id,item]));
     state=readProgress();bind();renderTabs();renderCalculator();renderStats();save();
     if(location.hash.startsWith('#tutorial'))history.replaceState(null,'',location.pathname+location.search);

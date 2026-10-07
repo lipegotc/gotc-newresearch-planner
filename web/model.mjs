@@ -42,14 +42,15 @@ export function buildMultiPlan(research, goals, levels = {}) {
   }).sort((a, b) => a.item.tree.localeCompare(b.item.tree) || a.item.row - b.item.row || a.item.column - b.item.column);
 }
 
-export function calculateCosts(plan, resources, efficiencies = {}, reductions = {}, sharedEfficiency = 0) {
+export function calculateCosts(plan, resources, efficiencies = {}, reductions = {}, sharedEfficiency = 0, sharedReduction = 0) {
   return resources.map(resource => {
     let original = 0;
     for (const step of plan) {
       const entries = step.item.costs[resource] || [];
       for (const level of step.missing) original += Number(entries[level - 1] || 0);
     }
-    const reduction = Math.max(0, Math.min(100, Number(reductions[resource]) || 0));
+    const reduction = Math.min(100, Math.max(0, Number(reductions[resource]) || 0)
+      + (BASE_RESOURCES.includes(resource) ? Math.max(0, Number(sharedReduction) || 0) : 0));
     const specific = Math.max(0, Number(efficiencies[resource]) || 0);
     const efficiency = specific + (BASE_RESOURCES.includes(resource) ? Math.max(0, Number(sharedEfficiency) || 0) : 0);
     const reduced = original * (1 - reduction / 100) / (1 + efficiency / 100);
@@ -67,7 +68,7 @@ export function calculateTreeCosts(plan, resources, boosts = {}) {
   const totals = resources.map(resource => ({ resource, original: 0, reduced: 0, saved: 0 }));
   for (const [tree, steps] of groups) {
     const profile = boosts[tree] || {};
-    const costs = calculateCosts(steps, resources, profile.efficiencies, profile.reductions, profile.sharedEfficiency);
+    const costs = calculateCosts(steps, resources, profile.efficiencies, profile.reductions, profile.sharedEfficiency, profile.sharedReduction);
     costs.forEach((cost, index) => {
       totals[index].original += cost.original;
       totals[index].reduced += cost.reduced;

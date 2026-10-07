@@ -32,7 +32,7 @@ To test on a phone, connect it to the same Wi-Fi network and open `http://COMPUT
 
 Reduced cost = original cost × (1 − reduction / 100) ÷ (1 + total efficiency / 100).
 
-For Food, Wood, Stone, and Iron, total efficiency adds Research Resource Efficiency to the resource-specific efficiency. Each resource/material has its own reduction. Displayed values are rounded; calculations retain full precision.
+For Food, Wood, Stone, and Iron, total efficiency adds Research Resource Efficiency to the resource-specific efficiency. Research Resource Reduction adds to the specific reductions for Food, Wood, Stone, and Iron, capped at 100% combined. Materials use only their own reduction. Displayed values are rounded; calculations retain full precision.
 
 ## Saved progress and backups
 

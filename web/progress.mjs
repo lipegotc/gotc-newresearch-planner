@@ -50,6 +50,7 @@ export function normalizeProgress(raw, research, resources) {
       efficiencies: adjustments(source.efficiencies, Number.MAX_SAFE_INTEGER, allowed),
       reductions: adjustments(source.reductions, 100, allowed),
       sharedEfficiency: boundedNumber(source.sharedEfficiency),
+      sharedReduction: boundedNumber(source.sharedReduction, 0, 100),
     }];
   }));
   return {
@@ -72,7 +73,7 @@ export function setCompletedLevel(state, id, level) {
 
 export function resetCalculation(state) {
   return { ...state, goals: [], boosts: Object.fromEntries(RESEARCH_TREES.map(tree =>
-    [tree, { efficiencies: {}, reductions: {}, sharedEfficiency: 0 }])) };
+    [tree, { efficiencies: {}, reductions: {}, sharedEfficiency: 0, sharedReduction: 0 }])) };
 }
 
 export function toggleRequirement(state, id, required, checked) {
