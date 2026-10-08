@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { buildPlan, buildMultiPlan, calculateCosts, calculateTreeCosts, valueAt, researchReference, referenceTotals } from "./web/model.mjs";
+import { buildPlan, buildMultiPlan, calculateCosts, calculateTreeCosts, resourceShortfalls, valueAt, researchReference, referenceTotals } from "./web/model.mjs";
 import { normalizeProgress, toggleRequirement, setCompletedLevel, resetCalculation, parseBoostInput } from "./web/progress.mjs";
 
 const data = JSON.parse(readFileSync(new URL("./web/data/research.json", import.meta.url), "utf8"));
@@ -216,3 +216,20 @@ for (const tree of ['Military III','Dragon Combat']) {
 }
 assert.equal(normalizeProgress({schemaVersion:3,boosts:{'Military III':{sharedReduction:999},'Dragon Combat':{sharedReduction:-5}}},data.research,data.resources).boosts['Military III'].sharedReduction,100);
 console.log('Research Resource Reduction: additive base resources, material exclusion, cap, tree isolation, backups, and reset passed.');
+
+// Inventory is a single pool for the combined plan, never applied per goal or tree.
+const inventoryProfile = normalizeProgress({schemaVersion:3, inventory:{Food:100, Wood:-4, Iron:'bad', 'Dragon Tomes':15, unknown:123}}, data.research, data.resources);
+assert.deepEqual(inventoryProfile.inventory, {Food:100, Wood:0, Iron:0, 'Dragon Tomes':15});
+assert.deepEqual(normalizeProgress(null,data.research,data.resources).inventory, {});
+assert.deepEqual(normalizeProgress(JSON.parse(JSON.stringify(inventoryProfile)),data.research,data.resources),inventoryProfile);
+assert.deepEqual(resetCalculation(inventoryProfile).inventory,inventoryProfile.inventory);
+const shortages = resourceShortfalls([{resource:'Food',original:1000,reduced:100.25},{resource:'Wood',original:200,reduced:50},{resource:'Iron',original:100,reduced:0}],{Food:100,Wood:999,Iron:20});
+assert.equal(shortages[0].missing,0.25);
+assert.equal(Math.ceil(shortages[0].missing),1);
+assert.equal(shortages[1].missing,0);
+assert.equal(shortages[2].missing,0);
+assert.equal(resourceShortfalls([{resource:'Food',reduced:55}])[0].missing,55);
+const mixedShortfall=resourceShortfalls(treeTotals,{Food:1000}).find(cost=>cost.resource==='Food');
+assert.equal(mixedShortfall.missing,Math.max(0,treeTotals.find(cost=>cost.resource==='Food').reduced-1000));
+assert.equal(resourceShortfalls([{resource:'Food',reduced:0}],{Food:500})[0].missing,0);
+console.log('Inventory: migration, validation, backup round-trip, reset retention, shared mixed-tree pool, fractional shortfalls, and zero floor passed.');

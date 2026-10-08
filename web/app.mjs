@@ -1,5 +1,5 @@
-import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, formatNumber, formatStat, valueAt, researchReference, referenceTotals } from './model.mjs?v=resource-reduction-1';
-import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=resource-reduction-1';
+import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, resourceShortfalls, formatNumber, formatStat, valueAt, researchReference, referenceTotals } from './model.mjs?v=resource-inventory-1';
+import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=resource-inventory-1';
 
 const byId = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -147,8 +147,9 @@ function renderCalculator(preserveEditing = false) {
   byId('maester-level').value = state.maester;
   byId('maester-output').innerHTML = state.goals.length ? `<strong>Required level ${needed || '—'}</strong><span class="building-status ${needed > state.maester ? 'warning' : 'good'}">${needed ? needed > state.maester ? 'Upgrade needed' : 'Building requirement met' : 'No research levels remaining'}</span>` : '<span class="muted">Add research to see the requirement.</span>';
   byId('plan-summary').textContent = `${state.goals.length} selected · ${unfinished.length} research remaining · ${unfinished.reduce((sum,step)=>sum+step.missing.length,0)} levels remaining`;
-  const costs = calculateTreeCosts(plan, resources, state.boosts);
-  byId('cost-body').innerHTML = costs.map(cost => `<tr><th scope="row">${resourceLabel(cost.resource)}</th><td class="number">${formatNumber(cost.original)}</td><td class="number">${formatNumber(cost.reduced)}</td></tr>`).join('');
+  const costs = resourceShortfalls(calculateTreeCosts(plan, resources, state.boosts), state.inventory);
+  renderHTML(byId('inventory-fields'), data.resources.map(resource => `<label class="inventory-field">${resourceLabel(resource)}<input type="number" min="0" max="${Number.MAX_SAFE_INTEGER}" step="1" inputmode="numeric" value="${state.inventory[resource] || 0}" data-inventory="${escapeHTML(resource)}" data-focus="inventory-${escapeHTML(resource)}" aria-label="Current amount of ${escapeHTML(resource)}" aria-describedby="inventory-help"></label>`).join(''), preserveEditing);
+  byId('cost-body').innerHTML = costs.map(cost => `<tr><th scope="row">${resourceLabel(cost.resource)}</th><td class="number" data-label="Original">${formatNumber(cost.original)}</td><td class="number" data-label="Reduced">${formatNumber(cost.reduced)}</td><td class="number" data-label="Missing">${formatNumber(Math.ceil(cost.missing))}</td></tr>`).join('');
   const selected = new Set(state.goals.map(goal => goal.id));
   byId('combined-costs').innerHTML = unfinished.map(step => `<section class="breakdown-item"><h3>${escapeHTML(step.item.name)} <small>${step.current} → ${step.desired} · ${selected.has(step.item.id) ? 'Selected research' : 'Requirement'}</small></h3>${costTable([step], resources)}</section>`).join('') || '<p class="muted">No remaining costs.</p>';
   const gains = new Map();
@@ -230,6 +231,16 @@ function bind() {
   for(const type of ['input','change']){
     byId('maester-level').addEventListener(type,editMaester);
   }
+  const editInventory = event => {
+    const input = event.target;
+    const resource = input.dataset.inventory;
+    if (!data.resources.includes(resource)) return;
+    if (event.type === 'input' && input.value === '') return;
+    const amount = readLevelInput(input, 0, Number.MAX_SAFE_INTEGER);
+    commit({...state, inventory:{...state.inventory, [resource]:amount}}, event.type === 'input');
+  };
+  byId('inventory-fields').addEventListener('input', editInventory);
+  byId('inventory-fields').addEventListener('change', editInventory);
   const selectBoostTree = tree => {
     if (!RESEARCH_TREES.includes(tree) || tree === state.boostTree) return;
     // Finish pending decimal edits before switching the shared input to another profile.
@@ -328,7 +339,7 @@ function bind() {
 }
 async function start(){
   try{
-    const response=await fetch('./data/research.json?v=resource-reduction-1');if(!response.ok)throw new Error('Research data could not be loaded.');
+    const response=await fetch('./data/research.json?v=resource-inventory-1');if(!response.ok)throw new Error('Research data could not be loaded.');
     data=await response.json();byResearch=new Map(data.research.map(item=>[item.id,item]));
     state=readProgress();bind();renderTabs();renderCalculator();renderStats();save();
     if(location.hash.startsWith('#tutorial'))history.replaceState(null,'',location.pathname+location.search);

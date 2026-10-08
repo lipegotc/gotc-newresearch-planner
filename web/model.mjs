@@ -122,3 +122,12 @@ export function referenceTotals(research, resources, tree, scope = 'all') {
     maester: Math.max(0, ...plan.map(step => step.maesterNeeded)),
   };
 }
+
+// Subtract a shared inventory once from the whole plan, after tree-specific boosts.
+export function resourceShortfalls(costs, inventory = {}) {
+  return costs.map(cost => {
+    const amount = Number(inventory[cost.resource] ?? 0);
+    const available = Number.isFinite(amount) ? Math.max(0, amount) : 0;
+    return {...cost, available, missing: Math.max(0, cost.reduced - available)};
+  });
+}
