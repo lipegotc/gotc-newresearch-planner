@@ -3,6 +3,12 @@ import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTre
 
 const byId = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+const RESOURCE_ICONS = {'Food': 'food', 'Wood': 'wood', 'Stone': 'stone', 'Iron': 'iron', 'Scholarly Fragments': 'scholarly-fragments', 'Pale Steel': 'pale-steel', 'Red Gold': 'red-gold', 'Glass Candle Shards': 'glass-candle-shards', 'Dragon Lore': 'dragon-lore', 'Dragon Secrets': 'dragon-secrets', 'Dragon Tomes': 'dragon-tomes'};
+function resourceLabel(resource) {
+  const slug = RESOURCE_ICONS[resource];
+  const icon = slug ? `<img class="resource-icon" src="./assets/resources/${slug}.png" alt="" width="22" height="22" decoding="async">` : '';
+  return `<span class="resource-label">${icon}<span class="resource-label-text">${escapeHTML(resource)}</span></span>`;
+}
 let data;
 let byResearch = new Map();
 let state;
@@ -80,7 +86,7 @@ function togglePickerGoal(id) {
 }
 function costTable(plan, resources) {
   const costs = calculateTreeCosts(plan, resources, state.boosts);
-  const rows = costs.filter(cost => cost.original).map(cost => `<tr><th scope="row">${escapeHTML(cost.resource)}</th><td class="number">${formatNumber(cost.original)}</td><td class="number">${formatNumber(cost.reduced)}</td></tr>`).join('');
+  const rows = costs.filter(cost => cost.original).map(cost => `<tr><th scope="row">${resourceLabel(cost.resource)}</th><td class="number">${formatNumber(cost.original)}</td><td class="number">${formatNumber(cost.reduced)}</td></tr>`).join('');
   return `<table class="cost-table"><thead><tr><th scope="col">Resource / material</th><th scope="col" class="number">Original</th><th scope="col" class="number">Reduced</th></tr></thead><tbody>${rows || '<tr><td colspan="3" class="empty">No remaining costs.</td></tr>'}</tbody></table>`;
 }
 function requiredList(goal, combinedById) {
@@ -116,7 +122,7 @@ function renderAdjustments(preserveEditing) {
     if (selected) byId('boost-panel').setAttribute('aria-labelledby', button.id);
   }
   byId('boost-scope-note').textContent = `Boosts apply only to ${state.boostTree === 'Military III' ? 'Military 3' : state.boostTree} research.`;
-  const row = resource => `<tr><th scope="row">${escapeHTML(resource)}</th><td><input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${profile.efficiencies[resource] || 0}" data-efficiency="${escapeHTML(resource)}" data-focus="efficiency-${escapeHTML(state.boostTree)}-${escapeHTML(resource)}" aria-label="${escapeHTML(resource)} efficiency percent" aria-describedby="boost-format-help"></td><td><input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${profile.reductions[resource] || 0}" data-reduction="${escapeHTML(resource)}" data-focus="reduction-${escapeHTML(state.boostTree)}-${escapeHTML(resource)}" aria-label="${escapeHTML(resource)} reduction percent" aria-describedby="boost-format-help"></td></tr>`;
+  const row = resource => `<tr><th scope="row">${resourceLabel(resource)}</th><td><input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${profile.efficiencies[resource] || 0}" data-efficiency="${escapeHTML(resource)}" data-focus="efficiency-${escapeHTML(state.boostTree)}-${escapeHTML(resource)}" aria-label="${escapeHTML(resource)} efficiency percent" aria-describedby="boost-format-help"></td><td><input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${profile.reductions[resource] || 0}" data-reduction="${escapeHTML(resource)}" data-focus="reduction-${escapeHTML(state.boostTree)}-${escapeHTML(resource)}" aria-label="${escapeHTML(resource)} reduction percent" aria-describedby="boost-format-help"></td></tr>`;
   renderHTML(byId('resource-adjustments'), BASE_RESOURCES.map(row).join(''), preserveEditing);
   // Each tree exposes only its applicable materials.
   renderHTML(byId('material-adjustments-body'), resourcesForTree(data.resources, state.boostTree).filter(resource => !BASE_RESOURCES.includes(resource)).map(row).join(''), preserveEditing);
@@ -142,7 +148,7 @@ function renderCalculator(preserveEditing = false) {
   byId('maester-output').innerHTML = state.goals.length ? `<strong>Required level ${needed || '—'}</strong><span class="building-status ${needed > state.maester ? 'warning' : 'good'}">${needed ? needed > state.maester ? 'Upgrade needed' : 'Building requirement met' : 'No research levels remaining'}</span>` : '<span class="muted">Add research to see the requirement.</span>';
   byId('plan-summary').textContent = `${state.goals.length} selected · ${unfinished.length} research remaining · ${unfinished.reduce((sum,step)=>sum+step.missing.length,0)} levels remaining`;
   const costs = calculateTreeCosts(plan, resources, state.boosts);
-  byId('cost-body').innerHTML = costs.map(cost => `<tr><th scope="row">${escapeHTML(cost.resource)}</th><td class="number">${formatNumber(cost.original)}</td><td class="number">${formatNumber(cost.reduced)}</td></tr>`).join('');
+  byId('cost-body').innerHTML = costs.map(cost => `<tr><th scope="row">${resourceLabel(cost.resource)}</th><td class="number">${formatNumber(cost.original)}</td><td class="number">${formatNumber(cost.reduced)}</td></tr>`).join('');
   const selected = new Set(state.goals.map(goal => goal.id));
   byId('combined-costs').innerHTML = unfinished.map(step => `<section class="breakdown-item"><h3>${escapeHTML(step.item.name)} <small>${step.current} → ${step.desired} · ${selected.has(step.item.id) ? 'Selected research' : 'Requirement'}</small></h3>${costTable([step], resources)}</section>`).join('') || '<p class="muted">No remaining costs.</p>';
   const gains = new Map();
@@ -181,11 +187,11 @@ function renderStats() {
   const totals = referenceTotals(data.research, data.resources, tree, byId('stats-scope').value);
   const scopeName = byId('stats-scope').value === 'all' ? 'All troop types + General' : byId('stats-scope').value === 'General' ? 'General research' : `${byId('stats-scope').value} + General`;
   byId('reference-total-summary').textContent = `${scopeName}: ${totals.goals.length} research to maximum level, plus ${totals.prerequisites.length} prerequisite research at minimum required levels. Maester level ${totals.maester}.`;
-  byId('reference-total-costs').innerHTML = totals.costs.filter(cost=>cost.original).map(cost=>`<div class="reference-total-item"><span>${escapeHTML(cost.resource)}</span><strong>${formatNumber(cost.original)}</strong></div>`).join('');
+  byId('reference-total-costs').innerHTML = totals.costs.filter(cost=>cost.original).map(cost=>`<div class="reference-total-item">${resourceLabel(cost.resource)}<strong>${formatNumber(cost.original)}</strong></div>`).join('');
   byId('reference-total-requirements').hidden = !totals.prerequisites.length;
   byId('reference-total-requirements-list').innerHTML = totals.prerequisites.map(step=>`<li>${escapeHTML(step.item.name)} <strong>Level ${step.desired}</strong></li>`).join('');
   byId('reference-caption').textContent = `${tree === 'Military III' ? 'Military 3' : tree} · Original costs per level`;
-  byId('stats-head').innerHTML = `<tr><th scope="col">Research</th><th scope="col">Stat / scope</th><th scope="col">Level</th><th scope="col" class="number">Cumulative stat</th><th scope="col" class="number">Level gain</th><th scope="col">Maester</th>${materials.map(resource=>`<th scope="col" class="number">${escapeHTML(resource)}</th>`).join('')}</tr>`;
+  byId('stats-head').innerHTML = `<tr><th scope="col">Research</th><th scope="col">Stat / scope</th><th scope="col">Level</th><th scope="col" class="number">Cumulative stat</th><th scope="col" class="number">Level gain</th><th scope="col">Maester</th>${materials.map(resource=>`<th scope="col" class="number">${resourceLabel(resource)}</th>`).join('')}</tr>`;
   byId('stats-body').innerHTML = rows.slice(0,statsLimit).map(({item,property,level,cumulative,gain,costs})=>`<tr><th scope="row">${escapeHTML(item.name)}</th><td>${escapeHTML(property.name)}<small>${escapeHTML(property.scope)}</small></td><td>${level}</td><td class="number">${formatStat(cumulative,property.unit)}</td><td class="number">+${formatStat(gain,property.unit)}</td><td>${level ? item.maester[level-1] : '—'}</td>${costs.map(cost=>`<td class="number">${formatNumber(cost)}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${6+materials.length}" class="empty">No matching research levels.</td></tr>`;
   byId('stats-count').textContent = `Showing ${Math.min(statsLimit,rows.length)} of ${formatNumber(rows.length)} levels`;
   byId('stats-more').hidden = statsLimit >= rows.length;
