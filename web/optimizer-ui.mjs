@@ -1,3 +1,4 @@
+import { editResourceAmount } from './resource-input.mjs';
 import { statLabel, marchSizeNotice } from './stat-icons.mjs';
 import { calculateTreeCosts, formatNumber, formatStat } from './model.mjs';
 import { resourcesForTree, boundedNumber, parseBoostInput, setCompletedLevel, optimizerWeightConflict } from './progress.mjs';
@@ -74,7 +75,7 @@ export function createOptimizerUI({data, getState, commit, switchTab, resourceLa
         ? 'General troop bonuses and march size only. Troop-specific and Dragon Specific bonuses are excluded from the goal.'
         : `${group} bonuses + General troop bonuses and march size. Other branches can be included as prerequisites.`;
     const resources = resourcesForTree(data.resources, tree);
-    renderHTML(byId('optimizer-inventory-fields'), `<div class="optimizer-resource-columns" aria-hidden="true"><span>Resource / material</span><span>Available</span><span>RSS kept (%)</span></div>${resources.map(resource => `<div class="optimizer-resource-row">${resourceLabel(resource)}<label><span class="field-label">Available</span><input type="number" min="0" max="${Number.MAX_SAFE_INTEGER}" step="1" inputmode="numeric" value="${state.inventory[resource] || 0}" data-opt-inventory="${escape(resource)}" data-focus="opt-inventory-${escape(resource)}" aria-label="Optimizer available ${escape(resource)}" aria-describedby="optimizer-resource-help"></label><label><span class="field-label">RSS kept (%)</span><input type="text" inputmode="decimal" autocomplete="off" value="${kept[resource] || 0}" data-opt-kept="${escape(resource)}" data-focus="opt-kept-${escape(resource)}" aria-label="RSS kept percent for ${escape(resource)}" aria-describedby="optimizer-resource-help"></label></div>`).join('')}`, preserveEditing);
+    renderHTML(byId('optimizer-inventory-fields'), `<div class="optimizer-resource-columns" aria-hidden="true"><span>Resource / material</span><span>Available</span><span>RSS kept (%)</span></div>${resources.map(resource => `<div class="optimizer-resource-row">${resourceLabel(resource)}<label><span class="field-label">Available</span><input type="text" inputmode="numeric" autocomplete="off" value="${formatNumber(state.inventory[resource] || 0)}" data-opt-inventory="${escape(resource)}" data-focus="opt-inventory-${escape(resource)}" aria-label="Optimizer available ${escape(resource)}" aria-describedby="optimizer-resource-help"></label><label><span class="field-label">RSS kept (%)</span><input type="text" inputmode="decimal" autocomplete="off" value="${kept[resource] || 0}" data-opt-kept="${escape(resource)}" data-focus="opt-kept-${escape(resource)}" aria-label="RSS kept percent for ${escape(resource)}" aria-describedby="optimizer-resource-help"></label></div>`).join('')}`, preserveEditing);
     const profile = state.boosts[tree];
     const boostRow = resource => `<tr><th scope="row">${resourceLabel(resource)}</th>${[['efficiencies','efficiency'],['reductions','reduction']].map(([field, label]) => `<td><input type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="${profile[field][resource] || 0}" data-opt-boost="${field}" data-opt-resource="${escape(resource)}" data-focus="opt-boost-${escape(tree)}-${field}-${escape(resource)}" aria-label="Optimizer ${escape(resource)} ${label} percent"></td>`).join('')}</tr>`;
     renderHTML(byId('optimizer-boost-fields'), `<p class="muted">${tree === 'Military III' ? 'Military 3' : tree} boosts sync both ways with Calculator. Decimals accept a dot or comma.</p>${[['sharedEfficiency','Research Resource Efficiency %'],['sharedReduction','Research Resource Reduction %']].map(([field, label]) => `<label class="shared-input">${label}<input type="text" inputmode="decimal" autocomplete="off" value="${profile[field]}" data-opt-shared="${field}" data-focus="opt-shared-${escape(tree)}-${field}" aria-label="Optimizer ${label}"></label>`).join('')}<table class="adjustment-table"><thead><tr><th scope="col">Resource / material</th><th scope="col">Efficiency %</th><th scope="col">Reduction %</th></tr></thead><tbody>${resources.map(boostRow).join('')}</tbody></table><p class="formula-note">Research Resource Efficiency and Reduction add to Food, Wood, Stone, and Iron only. Materials use their own boosts.</p>`, preserveEditing);
@@ -200,12 +201,16 @@ export function createOptimizerUI({data, getState, commit, switchTab, resourceLa
       if (value !== state.optimizer.weights[input.dataset.optWeight]) commit({...state, optimizer:{...state.optimizer, weights:{...state.optimizer.weights, [input.dataset.optWeight]:value}}}, event.type === 'input');
       return;
     }
-    if (input.dataset.optLevel || input.dataset.optInventory || input.id === 'optimizer-maester') {
+    if (input.dataset.optInventory) {
+      const amount = editResourceAmount(input, event.type === 'change');
+      if (amount !== null) commit({...state, inventory:{...state.inventory, [input.dataset.optInventory]:amount}}, event.type === 'input');
+      return;
+    }
+    if (input.dataset.optLevel || input.id === 'optimizer-maester') {
       const max = input.dataset.optLevel ? data.research.find(item => item.id === input.dataset.optLevel).maxLevel : input.id === 'optimizer-maester' ? 40 : Number.MAX_SAFE_INTEGER;
       const amount = boundedNumber(input.value, input.id === 'optimizer-maester' ? 1 : 0, max, true);
       if (event.type === 'change' || Number(input.value) !== amount) input.value = String(amount);
       if (input.dataset.optLevel) commit(setCompletedLevel(state, input.dataset.optLevel, amount), event.type === 'input');
-      else if (input.dataset.optInventory) commit({...state, inventory:{...state.inventory, [input.dataset.optInventory]:amount}}, event.type === 'input');
       else commit({...state, maester:amount}, event.type === 'input');
       return;
     }
