@@ -38,7 +38,12 @@ jobs:
           node --check web/app.mjs
           node --check web/model.mjs
           node --check web/progress.mjs
+          node --check web/optimizer.mjs
+          node --check web/optimizer-ui.mjs
+          node --check web/optimizer-worker.mjs
+          node --check web/stat-icons.mjs
           node test_model.mjs
+          node test_optimizer.mjs
       - name: Upload website
         if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3

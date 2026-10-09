@@ -34,6 +34,22 @@ Reduced cost = original cost × (1 − reduction / 100) ÷ (1 + total efficiency
 
 For Food, Wood, Stone, and Iron, total efficiency adds Research Resource Efficiency to the resource-specific efficiency. Research Resource Reduction adds to the specific reductions for Food, Wood, Stone, and Iron, capped at 100% combined. Materials use only their own reduction. Displayed values are rounded; calculations retain full precision.
 
+## Optimizer
+
+Choose Military 3 or Dragon Combat, a research group, and one or more of Attack, Defense, Health, and March Size. Infantry, Cavalry, and Ranged include General bonuses. Dragon Combat also has a Dragon Specific group with separate Dragon Defense and Dragon Attack vs. Dragon goals.
+
+- Resources, current levels, Maester level, and both trees' boost profiles sync with Calculator.
+- Set **RSS kept (%)** for each resource/material separately to leave that percentage unspent.
+- Assign each selected goal a distinct **importance** from 1 to 100 (selected goals cannot share a weight), then choose **Plain gain** (default) or **Remaining progress**. Plain gain weights actual percentage bonus points and march troop counts directly; large march counts can dominate a mixed goal because the units differ. Remaining progress weights each gain as a fraction of that goal’s remaining research bonuses reachable at your Maester level, before resource limits. Neither mode guarantees a minimum stat gain. A weight of 2 gives twice the score contribution of 1 for the same compared gain.
+- The optimizer maximizes weighted progress across selected research bonuses within every resource budget, including exact tier costs and shared prerequisites, and respecting the Maester level.
+- Troop/stat labels use small game-inspired icons; combinations use paired icons. A yellow note explains when the march troop count exceeds the displayed gain for another selected priority, with no note for March Size-only plans.
+- Results show gains, a collapsible Research Order in valid prerequisite order, discounted spending, and remaining resources. Conditional bonuses are summed for the selected group; this is not a battle damage simulator.
+- **Optimal** means the best gain was proved within numerical tolerances. **Best found** means the search reached its limit; a better plan may exist.
+- **Use plan in Calculator** asks for confirmation before replacing manual selections and desired levels. It does not spend resources or mark recommended levels completed.
+- Input changes invalidate previous results. Settings persist and are included in backups; regenerate recommendations after reopening.
+
+Optimization runs on your device using the bundled MIT-licensed HiGHS JavaScript/WebAssembly solver (version 1.15.3) in a background worker. No AI service or external solver API is used. Costs remain estimates because the game may use greater boost precision internally; keep a buffer and check in-game costs.
+
 ## Saved progress and backups
 
 Progress saves automatically in the browser's local storage, separately for each browser profile and site origin. There is no account or automatic synchronization between devices. Use **Backup → Export progress** before clearing site data or moving to another browser, device, or hosting URL. Import replaces the current profile.

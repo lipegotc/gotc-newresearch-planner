@@ -1,5 +1,8 @@
-import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, resourceShortfalls, formatNumber, formatStat, valueAt, researchReference, referenceTotals } from './model.mjs?v=resource-inventory-1';
-import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=resource-inventory-1';
+import { statLabel, decorateStaticStatLabels } from './stat-icons.mjs?v=optimizer-local-8';
+import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, resourceShortfalls, formatNumber, formatStat, valueAt, researchReference, referenceTotals } from './model.mjs?v=optimizer-local-8';
+import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=optimizer-local-8';
+
+import { createOptimizerUI } from './optimizer-ui.mjs?v=optimizer-local-8';
 
 const byId = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -13,6 +16,7 @@ let data;
 let byResearch = new Map();
 let state;
 let statsLimit = 60;
+let optimizerUI;
 
 function readProgress() {
   try { return normalizeProgress(JSON.parse(localStorage.getItem(STORAGE_KEY)), data.research, data.resources); }
@@ -26,6 +30,7 @@ function commit(next, preserveEditing = false) {
   state = normalizeProgress(next, data.research, data.resources);
   save();
   renderCalculator(preserveEditing);
+  optimizerUI?.render(preserveEditing);
 }
 function announce(message) { byId('app-message').textContent = message; }
 function readLevelInput(input, min, max) {
@@ -49,11 +54,12 @@ function renderHTML(element, html, preserveEditing) {
   element.replaceChildren(template.content);
 }
 function switchTab(tab) {
-  if (!['calculator','help','stats'].includes(tab)) return;
+  if (!['calculator','optimizer','help','stats'].includes(tab)) return;
   state.tab = tab;
   save();
   renderTabs();
   if (tab === 'stats') renderStats();
+  if (tab === 'optimizer') optimizerUI?.render();
   // Remove obsolete tutorial anchors from the previous interface.
   if (location.hash) history.replaceState(null, '', location.pathname + location.search);
   window.scrollTo({top:0, behavior:'instant'});
@@ -99,7 +105,7 @@ function requiredList(goal, combinedById) {
     const { item, desired, current: completed } = shared;
     const achieved = completed >= desired;
     const isGoal = state.goals.some(selected => selected.id === item.id);
-    return `<div class="req-row"><label class="req-check"><input type="checkbox" data-achieved="${item.id}" data-required="${desired}" data-focus="achieved-${goal.id}-${item.id}" aria-label="Achieved ${escapeHTML(item.name)} level ${desired}" ${achieved ? 'checked' : ''}><span><strong>${escapeHTML(item.name)}</strong><small>Required level ${desired} · ${achieved ? 'Achieved' : 'Not achieved'}${isGoal ? ' · Also selected' : ''}</small></span></label><label class="req-level">Current level<input type="number" min="0" max="${item.maxLevel}" step="1" inputmode="numeric" value="${completed}" data-current="${item.id}" data-focus="requirement-${goal.id}-${item.id}" aria-label="Current level for required ${escapeHTML(item.name)}"></label></div>`;
+    return `<div class="req-row"><label class="req-check"><input type="checkbox" data-achieved="${item.id}" data-required="${desired}" data-focus="achieved-${goal.id}-${item.id}" aria-label="Achieved ${escapeHTML(item.name)} level ${desired}" ${achieved ? 'checked' : ''}><span><strong>${statLabel(item.name)}</strong><small>Required level ${desired} · ${achieved ? 'Achieved' : 'Not achieved'}${isGoal ? ' · Also selected' : ''}</small></span></label><label class="req-level">Current level<input type="number" min="0" max="${item.maxLevel}" step="1" inputmode="numeric" value="${completed}" data-current="${item.id}" data-focus="requirement-${goal.id}-${item.id}" aria-label="Current level for required ${escapeHTML(item.name)}"></label></div>`;
   }).join('');
   return `<details class="disclosure" data-disclosure="requirements-${goal.id}"><summary>Requirements · ${remaining} remaining</summary><div class="details-content">${rows || '<p class="muted">No research prerequisites.</p>'}<p class="requirement-note">Unmet requirements are included in totals. Check Achieved to record the required level; uncheck to undo. Shared requirements are counted once.</p></div></details>`;
 }
@@ -108,10 +114,10 @@ function goalCard(goal, combinedById, resources) {
   const current = state.levels[item.id] || 0;
   const ownPlan = buildPlan(data.research, goal.id, goal.level, state.levels);
   const ownStep = ownPlan.find(step => step.item.id === goal.id);
-  const gains = ownStep.gains.map(gain => `<div>+${formatStat(gain.amount, gain.property.unit)}<small>${escapeHTML(gain.property.name)}</small></div>`).join('');
+  const gains = ownStep.gains.map(gain => `<div>+${formatStat(gain.amount, gain.property.unit)}<small>${statLabel(gain.property.name)}</small></div>`).join('');
   const shared = combinedById.get(item.id);
   const extra = shared.desired > goal.level ? `<p class="requirement-note">Another selection requires this research at level ${shared.desired}. Combined totals include that level.</p>` : '';
-  return `<article class="goal" aria-label="${escapeHTML(item.name)}"><div class="goal-row"><div class="goal-name"><small>${escapeHTML(item.tree)}</small><strong>${escapeHTML(item.name)}</strong></div><label><span class="field-label">Current level</span><input type="number" min="0" max="${item.maxLevel}" step="1" inputmode="numeric" value="${current}" data-current="${item.id}" data-focus="current-${item.id}" aria-label="Current level for ${escapeHTML(item.name)}"></label><label><span class="field-label">Desired level</span><input type="number" min="1" max="${item.maxLevel}" step="1" inputmode="numeric" value="${goal.level}" data-desired="${item.id}" data-focus="desired-${item.id}" aria-label="Desired level for ${escapeHTML(item.name)}"></label><div class="goal-stat"><span class="field-label">Stat gain</span>${gains}</div><div class="goal-maester"><span class="field-label">Maester</span>${item.maester[goal.level-1]}</div><button class="button remove" data-remove="${item.id}" aria-label="Remove ${escapeHTML(item.name)}">Remove</button></div>${current >= goal.level ? '<p class="requirement-note good">Desired level already achieved.</p>' : ''}${extra}${requiredList(goal, combinedById)}<details class="disclosure" data-disclosure="costs-${goal.id}"><summary>Research cost breakdown</summary><div class="details-content"><p class="muted">Selected research and its unmet prerequisites. Shared costs also shown here are counted only once in combined totals.</p>${costTable(ownPlan, resources)}</div></details></article>`;
+  return `<article class="goal" aria-label="${escapeHTML(item.name)}"><div class="goal-row"><div class="goal-name"><small>${statLabel(item.tree)}</small><strong>${statLabel(item.name)}</strong></div><label><span class="field-label">Current level</span><input type="number" min="0" max="${item.maxLevel}" step="1" inputmode="numeric" value="${current}" data-current="${item.id}" data-focus="current-${item.id}" aria-label="Current level for ${escapeHTML(item.name)}"></label><label><span class="field-label">Desired level</span><input type="number" min="1" max="${item.maxLevel}" step="1" inputmode="numeric" value="${goal.level}" data-desired="${item.id}" data-focus="desired-${item.id}" aria-label="Desired level for ${escapeHTML(item.name)}"></label><div class="goal-stat"><span class="field-label">Stat gain</span>${gains}</div><div class="goal-maester"><span class="field-label">Maester</span>${item.maester[goal.level-1]}</div><button class="button remove" data-remove="${item.id}" aria-label="Remove ${escapeHTML(item.name)}">Remove</button></div>${current >= goal.level ? '<p class="requirement-note good">Desired level already achieved.</p>' : ''}${extra}${requiredList(goal, combinedById)}<details class="disclosure" data-disclosure="costs-${goal.id}"><summary>Research cost breakdown</summary><div class="details-content"><p class="muted">Selected research and its unmet prerequisites. Shared costs also shown here are counted only once in combined totals.</p>${costTable(ownPlan, resources)}</div></details></article>`;
 }
 function renderAdjustments(preserveEditing) {
   const profile = state.boosts[state.boostTree];
@@ -151,7 +157,7 @@ function renderCalculator(preserveEditing = false) {
   renderHTML(byId('inventory-fields'), data.resources.map(resource => `<label class="inventory-field">${resourceLabel(resource)}<input type="number" min="0" max="${Number.MAX_SAFE_INTEGER}" step="1" inputmode="numeric" value="${state.inventory[resource] || 0}" data-inventory="${escapeHTML(resource)}" data-focus="inventory-${escapeHTML(resource)}" aria-label="Current amount of ${escapeHTML(resource)}" aria-describedby="inventory-help"></label>`).join(''), preserveEditing);
   byId('cost-body').innerHTML = costs.map(cost => `<tr><th scope="row">${resourceLabel(cost.resource)}</th><td class="number" data-label="Original">${formatNumber(cost.original)}</td><td class="number" data-label="Reduced">${formatNumber(cost.reduced)}</td><td class="number" data-label="Missing">${formatNumber(Math.ceil(cost.missing))}</td></tr>`).join('');
   const selected = new Set(state.goals.map(goal => goal.id));
-  byId('combined-costs').innerHTML = unfinished.map(step => `<section class="breakdown-item"><h3>${escapeHTML(step.item.name)} <small>${step.current} → ${step.desired} · ${selected.has(step.item.id) ? 'Selected research' : 'Requirement'}</small></h3>${costTable([step], resources)}</section>`).join('') || '<p class="muted">No remaining costs.</p>';
+  byId('combined-costs').innerHTML = unfinished.map(step => `<section class="breakdown-item"><h3>${statLabel(step.item.name)} <small>${step.current} → ${step.desired} · ${selected.has(step.item.id) ? 'Selected research' : 'Requirement'}</small></h3>${costTable([step], resources)}</section>`).join('') || '<p class="muted">No remaining costs.</p>';
   const gains = new Map();
   for (const step of plan) for (const gain of step.gains) {
     if (!gain.amount) continue;
@@ -159,7 +165,7 @@ function renderCalculator(preserveEditing = false) {
     previous.amount += gain.amount;
     gains.set(gain.property.raw, previous);
   }
-  byId('gain-list').innerHTML = [...gains.values()].sort((a,b)=>a.name.localeCompare(b.name)).map(gain => `<div class="gain-row"><span>${escapeHTML(gain.name)}<small>${escapeHTML(gain.scope)}</small></span><strong>+${formatStat(gain.amount,gain.unit)}</strong></div>`).join('') || '<p class="muted">No remaining stat gains.</p>';
+  byId('gain-list').innerHTML = [...gains.values()].sort((a,b)=>a.name.localeCompare(b.name)).map(gain => `<div class="gain-row"><span>${statLabel(gain.name)}<small>${statLabel(gain.scope)}</small></span><strong>+${formatStat(gain.amount,gain.unit)}</strong></div>`).join('') || '<p class="muted">No remaining stat gains.</p>';
   renderAdjustments(preserveEditing);
   const replacement = focusKey ? [...document.querySelectorAll('[data-focus]')].find(element => element.dataset.focus === focusKey) : activeInput;
   if (editingValue !== null && replacement?.isConnected) replacement.value = editingValue;
@@ -168,12 +174,13 @@ function renderCalculator(preserveEditing = false) {
 }
 function renderPicker() {
   const tree = byId('picker-tree').value;
+  byId('picker-tree-icons').innerHTML = statLabel(tree);
   const query = byId('picker-search').value.trim().toLowerCase();
   const matches = data.research.filter(item => item.tree === tree && `${item.name} ${item.properties.map(prop=>prop.name).join(' ')}`.toLowerCase().includes(query)).sort((a,b)=>a.name.localeCompare(b.name));
   byId('picker-count').textContent = `${matches.length} result${matches.length===1 ? '' : 's'} found`;
   byId('picker-results').innerHTML = matches.map(item => {
     const added = state.goals.some(goal=>goal.id===item.id);
-    return `<div class="picker-item"><div><strong>${escapeHTML(item.name)}</strong><p>${escapeHTML(item.properties.map(prop=>prop.name).join(' · '))} · Current level ${state.levels[item.id] || 0}</p></div><button class="button primary" data-toggle-goal="${item.id}" aria-label="${added ? 'Unselect' : 'Add'} ${escapeHTML(item.name)}">${added ? 'Unselect' : 'Add'}</button></div>`;
+    return `<div class="picker-item"><div><strong>${statLabel(item.name)}</strong><p>${item.properties.map(prop=>statLabel(prop.name)).join(' · ')} · Current level ${state.levels[item.id] || 0}</p></div><button class="button primary" data-toggle-goal="${item.id}" aria-label="${added ? 'Unselect' : 'Add'} ${escapeHTML(item.name)}">${added ? 'Unselect' : 'Add'}</button></div>`;
   }).join('') || '<p class="empty">No matching research.</p>';
 }
 function renderStats() {
@@ -184,16 +191,17 @@ function renderStats() {
     button.tabIndex = selected ? 0 : -1;
     if (selected) byId('reference-panel').setAttribute('aria-labelledby', button.id);
   }
+  byId('reference-scope-icons').innerHTML = ['all','General'].includes(byId('stats-scope').value) ? '' : statLabel(byId('stats-scope').value);
   const {materials, rows} = researchReference(data.research, data.resources, tree, byId('stats-scope').value, byId('stats-search').value);
   const totals = referenceTotals(data.research, data.resources, tree, byId('stats-scope').value);
   const scopeName = byId('stats-scope').value === 'all' ? 'All troop types + General' : byId('stats-scope').value === 'General' ? 'General research' : `${byId('stats-scope').value} + General`;
-  byId('reference-total-summary').textContent = `${scopeName}: ${totals.goals.length} research to maximum level, plus ${totals.prerequisites.length} prerequisite research at minimum required levels. Maester level ${totals.maester}.`;
+  byId('reference-total-summary').innerHTML = `${statLabel(scopeName)}: ${totals.goals.length} research to maximum level, plus ${totals.prerequisites.length} prerequisite research at minimum required levels. Maester level ${totals.maester}.`;
   byId('reference-total-costs').innerHTML = totals.costs.filter(cost=>cost.original).map(cost=>`<div class="reference-total-item">${resourceLabel(cost.resource)}<strong>${formatNumber(cost.original)}</strong></div>`).join('');
   byId('reference-total-requirements').hidden = !totals.prerequisites.length;
-  byId('reference-total-requirements-list').innerHTML = totals.prerequisites.map(step=>`<li>${escapeHTML(step.item.name)} <strong>Level ${step.desired}</strong></li>`).join('');
-  byId('reference-caption').textContent = `${tree === 'Military III' ? 'Military 3' : tree} · Original costs per level`;
+  byId('reference-total-requirements-list').innerHTML = totals.prerequisites.map(step=>`<li>${statLabel(step.item.name)} <strong>Level ${step.desired}</strong></li>`).join('');
+  byId('reference-caption').innerHTML = `${statLabel(tree === 'Military III' ? 'Military 3' : tree)} · Original costs per level`;
   byId('stats-head').innerHTML = `<tr><th scope="col">Research</th><th scope="col">Stat / scope</th><th scope="col">Level</th><th scope="col" class="number">Cumulative stat</th><th scope="col" class="number">Level gain</th><th scope="col">Maester</th>${materials.map(resource=>`<th scope="col" class="number">${resourceLabel(resource)}</th>`).join('')}</tr>`;
-  byId('stats-body').innerHTML = rows.slice(0,statsLimit).map(({item,property,level,cumulative,gain,costs})=>`<tr><th scope="row">${escapeHTML(item.name)}</th><td>${escapeHTML(property.name)}<small>${escapeHTML(property.scope)}</small></td><td>${level}</td><td class="number">${formatStat(cumulative,property.unit)}</td><td class="number">+${formatStat(gain,property.unit)}</td><td>${level ? item.maester[level-1] : '—'}</td>${costs.map(cost=>`<td class="number">${formatNumber(cost)}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${6+materials.length}" class="empty">No matching research levels.</td></tr>`;
+  byId('stats-body').innerHTML = rows.slice(0,statsLimit).map(({item,property,level,cumulative,gain,costs})=>`<tr><th scope="row">${statLabel(item.name)}</th><td>${statLabel(property.name)}<small>${statLabel(property.scope)}</small></td><td>${level}</td><td class="number">${formatStat(cumulative,property.unit)}</td><td class="number">+${formatStat(gain,property.unit)}</td><td>${level ? item.maester[level-1] : '—'}</td>${costs.map(cost=>`<td class="number">${formatNumber(cost)}</td>`).join('')}</tr>`).join('') || `<tr><td colspan="${6+materials.length}" class="empty">No matching research levels.</td></tr>`;
   byId('stats-count').textContent = `Showing ${Math.min(statsLimit,rows.length)} of ${formatNumber(rows.length)} levels`;
   byId('stats-more').hidden = statsLimit >= rows.length;
 }
@@ -335,13 +343,13 @@ function bind() {
     }catch(error){console.warn('Progress import failed:',error.message);byId('backup-message').textContent='This file could not be imported. Choose an exported planner progress file.';}
     event.target.value='';
   });
-  window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY || event.key===null){state=readProgress();renderTabs();renderCalculator();renderStats();if(byId('picker-dialog').open)renderPicker();}});
+  window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY || event.key===null){state=readProgress();renderTabs();renderCalculator();renderStats();optimizerUI?.render();if(byId('picker-dialog').open)renderPicker();}});
 }
 async function start(){
   try{
-    const response=await fetch('./data/research.json?v=resource-inventory-1');if(!response.ok)throw new Error('Research data could not be loaded.');
+    const response=await fetch('./data/research.json?v=optimizer-local-8');if(!response.ok)throw new Error('Research data could not be loaded.');
     data=await response.json();byResearch=new Map(data.research.map(item=>[item.id,item]));
-    state=readProgress();bind();renderTabs();renderCalculator();renderStats();save();
+    state=readProgress();decorateStaticStatLabels(byId('help-view'));for(const button of document.querySelectorAll('[data-reference-tree], [data-boost-tree]')) button.innerHTML=statLabel(button.textContent);bind();optimizerUI=createOptimizerUI({data,getState:()=>state,commit,switchTab,resourceLabel,renderHTML});renderTabs();renderCalculator();renderStats();optimizerUI.render();save();
     if(location.hash.startsWith('#tutorial'))history.replaceState(null,'',location.pathname+location.search);
   }catch(error){byId('main').innerHTML=`<section class="panel"><h1>Could not load research data</h1><p>${escapeHTML(error.message)}</p><p>Start the local server using Start App.cmd, then reopen the app.</p></section>`;}
 }

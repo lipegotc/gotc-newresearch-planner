@@ -1,6 +1,6 @@
 export const STORAGE_KEY = "conquest-research-atlas-v1";
 export const APP_TITLE = "GoT: Conquest - Military 3 | Dragon Combat Research Planner";
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = 9;
 export const RESEARCH_TREES = ["Military III", "Dragon Combat"];
 const DRAGON_MATERIALS = ["Dragon Lore", "Dragon Secrets", "Dragon Tomes"];
 export function resourcesForTree(resources, tree) {
@@ -55,7 +55,7 @@ export function normalizeProgress(raw, research, resources) {
   }));
   return {
     schemaVersion: SCHEMA_VERSION,
-    tab: input.schemaVersion >= 2 && ["calculator", "help", "stats"].includes(input.tab) ? input.tab : "calculator",
+    tab: input.schemaVersion >= 2 && ["calculator", "optimizer", "help", "stats"].includes(input.tab) ? input.tab : "calculator",
     goals: [...goals].map(([id, level]) => ({ id, level })), levels, markHistory,
     maester: boundedNumber(input.maester ?? 1, 1, 40, true),
     boosts,
@@ -63,6 +63,44 @@ export function normalizeProgress(raw, research, resources) {
       .map(([resource, amount]) => [resource, Math.trunc(amount)])),
     referenceTree: RESEARCH_TREES.includes(input.referenceTree) ? input.referenceTree : "Military III",
     boostTree: RESEARCH_TREES.includes(input.boostTree) ? input.boostTree : "Military III",
+    optimizer: normalizeOptimizer(input.optimizer, resources),
+  };
+}
+
+// Preserve distinct saved weights; give duplicate/new selections an unused value.
+export function uniqueOptimizerWeights(goals, selected, raw) {
+  const weights = Object.fromEntries(goals.map(goal => [goal, boundedNumber(record(raw)[goal] ?? 1, 1, 100, true)]));
+  const reserved = new Set(selected.map(goal => weights[goal]));
+  const used = new Set();
+  for (const goal of selected) {
+    if (used.has(weights[goal])) {
+      let next = 1;
+      while (reserved.has(next) || used.has(next)) next++;
+      weights[goal] = next;
+      reserved.add(next);
+    }
+    used.add(weights[goal]);
+  }
+  return weights;
+}
+
+export function optimizerWeightConflict(goals, weights, goal, value) {
+  return goals.find(other => other !== goal && weights[other] === value) || null;
+}
+
+function normalizeOptimizer(raw, resources) {
+  const input = record(raw);
+  const tree = RESEARCH_TREES.includes(input.tree) ? input.tree : 'Military III';
+  const groups = ['General', 'Infantry', 'Cavalry', 'Ranged', ...(tree === 'Dragon Combat' ? ['Dragon Specific'] : [])];
+  const group = groups.includes(input.group) ? input.group : 'Infantry';
+  const goals = group === 'Dragon Specific' ? ['Dragon Defense', 'Dragon Attack vs. Dragon'] : ['Attack', 'Defense', 'Health', 'March Size'];
+  const selected = [...new Set((Array.isArray(input.goals) ? input.goals : [input.goal]).filter(goal => goals.includes(goal)))];
+  return {
+    tree, group, goals:selected.length ? selected : [goals[0]],
+    comparison:input.comparison === 'remaining' ? 'remaining' : 'plain',
+    weights:uniqueOptimizerWeights(goals, selected.length ? selected : [goals[0]], input.weights),
+    kept:Object.fromEntries(Object.entries(record(input.kept)).filter(([resource]) => resources.includes(resource))
+      .map(([resource, value]) => [resource, boundedNumber(value, 0, 100)])),
   };
 }
 

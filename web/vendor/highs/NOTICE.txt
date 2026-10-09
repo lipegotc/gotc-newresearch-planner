@@ -1,0 +1,7 @@
+HiGHS JavaScript / WebAssembly solver
+Package: highs 1.15.3
+Source: https://github.com/lovasoa/highs-js
+Distribution: https://registry.npmjs.org/highs/-/highs-1.15.3.tgz
+License: MIT (included as LICENSE)
+Files highs.mjs and highs.wasm are the unmodified npm distribution.
+Loaded locally in a Web Worker; no third-party API is contacted by the app.
