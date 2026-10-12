@@ -22,6 +22,8 @@ assert.equal(packCosts(data,state,true).find(row=>row.resource==='Scholarly Frag
 ({data,state}=fixture({'Glass Candle Shards':2500000}));
 result=solvePacks(data,state,highs);assert.equal(result.total,100);
 assert.equal(result.quantities[0]+result.quantities[7],100);
+assert.equal(result.quantities[0],50);
+assert.equal(result.quantities[7],50);
 assert.equal(result.boosted,false);
 assert.equal(result.schedule.length,20);
 assert.equal(result.startingEvent,'Dragon');

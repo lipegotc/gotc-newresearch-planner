@@ -1,10 +1,10 @@
-import { createPackUI } from './pack-ui.mjs?v=pack-events-1';
-import { editResourceAmount } from './resource-input.mjs?v=pack-events-1';
-import { statLabel, decorateStaticStatLabels } from './stat-icons.mjs?v=pack-events-1';
-import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, resourceShortfalls, formatNumber, formatStat, valueAt, researchReference, referenceTotals } from './model.mjs?v=pack-events-1';
-import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=pack-events-1';
+import { createPackUI } from './pack-ui.mjs?v=pack-events-2';
+import { editResourceAmount } from './resource-input.mjs?v=pack-events-2';
+import { statLabel, decorateStaticStatLabels } from './stat-icons.mjs?v=pack-events-2';
+import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, resourceShortfalls, formatNumber, formatStat, valueAt, researchReference, referenceTotals } from './model.mjs?v=pack-events-2';
+import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=pack-events-2';
 
-import { createOptimizerUI } from './optimizer-ui.mjs?v=pack-events-1';
+import { createOptimizerUI } from './optimizer-ui.mjs?v=pack-events-2';
 
 const byId = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -351,7 +351,7 @@ function bind() {
 }
 async function start(){
   try{
-    const response=await fetch('./data/research.json?v=pack-events-1');if(!response.ok)throw new Error('Research data could not be loaded.');
+    const response=await fetch('./data/research.json?v=pack-events-2');if(!response.ok)throw new Error('Research data could not be loaded.');
     data=await response.json();byResearch=new Map(data.research.map(item=>[item.id,item]));
     state=readProgress();decorateStaticStatLabels(byId('help-view'));for(const button of document.querySelectorAll('[data-reference-tree], [data-boost-tree]')) button.innerHTML=statLabel(button.textContent);bind();optimizerUI=createOptimizerUI({data,getState:()=>state,commit,switchTab,resourceLabel,renderHTML});packUI=createPackUI({data,getState:()=>state,commit,resourceLabel});renderTabs();renderCalculator();renderStats();optimizerUI.render();packUI.render();save();
     if(location.hash.startsWith('#tutorial'))history.replaceState(null,'',location.pathname+location.search);
