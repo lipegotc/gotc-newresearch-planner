@@ -1,6 +1,6 @@
 export const STORAGE_KEY = "conquest-research-atlas-v1";
 export const APP_TITLE = "GoT: Conquest - Military 3 | Dragon Combat Research Planner";
-export const SCHEMA_VERSION = 9;
+export const SCHEMA_VERSION = 10;
 export const RESEARCH_TREES = ["Military III", "Dragon Combat"];
 const DRAGON_MATERIALS = ["Dragon Lore", "Dragon Secrets", "Dragon Tomes"];
 export function resourcesForTree(resources, tree) {
@@ -63,6 +63,7 @@ export function normalizeProgress(raw, research, resources) {
       .map(([resource, amount]) => [resource, Math.trunc(amount)])),
     referenceTree: RESEARCH_TREES.includes(input.referenceTree) ? input.referenceTree : "Military III",
     boostTree: RESEARCH_TREES.includes(input.boostTree) ? input.boostTree : "Military III",
+    packExcluded: Array.isArray(input.packExcluded) ? [...new Set(input.packExcluded.filter(resource => resources.includes(resource)))] : [],
     optimizer: normalizeOptimizer(input.optimizer, resources),
   };
 }

@@ -42,6 +42,12 @@ jobs:
           node --check web/optimizer-ui.mjs
           node --check web/optimizer-worker.mjs
           node --check web/stat-icons.mjs
+          node --check web/pack-model.mjs
+          node --check web/pack-schedule.mjs
+          node --check web/pack-planner.mjs
+          node --check web/pack-ui.mjs
+          node --check web/pack-worker.mjs
+          node test_packs.mjs
           node test_model.mjs
           node test_optimizer.mjs
       - name: Upload website

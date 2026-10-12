@@ -1,9 +1,10 @@
-import { editResourceAmount } from './resource-input.mjs?v=optimizer-local-9';
-import { statLabel, decorateStaticStatLabels } from './stat-icons.mjs?v=optimizer-local-9';
-import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, resourceShortfalls, formatNumber, formatStat, valueAt, researchReference, referenceTotals } from './model.mjs?v=optimizer-local-9';
-import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=optimizer-local-9';
+import { createPackUI } from './pack-ui.mjs?v=pack-events-1';
+import { editResourceAmount } from './resource-input.mjs?v=pack-events-1';
+import { statLabel, decorateStaticStatLabels } from './stat-icons.mjs?v=pack-events-1';
+import { BASE_RESOURCES, buildPlan, buildMultiPlan, calculateTreeCosts, resourceShortfalls, formatNumber, formatStat, valueAt, researchReference, referenceTotals } from './model.mjs?v=pack-events-1';
+import { APP_TITLE, STORAGE_KEY, SCHEMA_VERSION, RESEARCH_TREES, resourcesForTree, boundedNumber, parseBoostInput, normalizeProgress, setCompletedLevel, toggleRequirement, resetCalculation } from './progress.mjs?v=pack-events-1';
 
-import { createOptimizerUI } from './optimizer-ui.mjs?v=optimizer-local-9';
+import { createOptimizerUI } from './optimizer-ui.mjs?v=pack-events-1';
 
 const byId = id => document.getElementById(id);
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -18,6 +19,7 @@ let byResearch = new Map();
 let state;
 let statsLimit = 60;
 let optimizerUI;
+let packUI;
 
 function readProgress() {
   try { return normalizeProgress(JSON.parse(localStorage.getItem(STORAGE_KEY)), data.research, data.resources); }
@@ -32,6 +34,7 @@ function commit(next, preserveEditing = false) {
   save();
   renderCalculator(preserveEditing);
   optimizerUI?.render(preserveEditing);
+  packUI?.render(preserveEditing);
 }
 function announce(message) { byId('app-message').textContent = message; }
 function readLevelInput(input, min, max) {
@@ -156,7 +159,7 @@ function renderCalculator(preserveEditing = false) {
   byId('plan-summary').textContent = `${state.goals.length} selected · ${unfinished.length} research remaining · ${unfinished.reduce((sum,step)=>sum+step.missing.length,0)} levels remaining`;
   const costs = resourceShortfalls(calculateTreeCosts(plan, resources, state.boosts), state.inventory);
   renderHTML(byId('inventory-fields'), data.resources.map(resource => `<label class="inventory-field">${resourceLabel(resource)}<input type="text" inputmode="numeric" autocomplete="off" value="${formatNumber(state.inventory[resource] || 0)}" data-inventory="${escapeHTML(resource)}" data-focus="inventory-${escapeHTML(resource)}" aria-label="Current amount of ${escapeHTML(resource)}" aria-describedby="inventory-help"></label>`).join(''), preserveEditing);
-  byId('cost-body').innerHTML = costs.map(cost => `<tr><th scope="row">${resourceLabel(cost.resource)}</th><td class="number" data-label="Original">${formatNumber(cost.original)}</td><td class="number" data-label="Reduced">${formatNumber(cost.reduced)}</td><td class="number" data-label="Missing">${formatNumber(Math.ceil(cost.missing))}</td></tr>`).join('');
+  byId('cost-body').innerHTML = costs.map(cost => `<tr><th scope="row">${resourceLabel(cost.resource)}</th><td class="pack-source-cell" data-label="Get this elsewhere"><label class="pack-exclude"><input type="checkbox" data-pack-resource="${escapeHTML(cost.resource)}" data-focus="pack-source-${escapeHTML(cost.resource)}" aria-label="Get ${escapeHTML(cost.resource)} elsewhere" ${state.packExcluded.includes(cost.resource)?'checked':''}><span class="sr-only">Get ${escapeHTML(cost.resource)} elsewhere</span></label></td><td class="number" data-label="Original">${formatNumber(cost.original)}</td><td class="number" data-label="Reduced">${formatNumber(cost.reduced)}</td><td class="number" data-label="Missing">${formatNumber(Math.ceil(cost.missing))}</td></tr>`).join('');
   const selected = new Set(state.goals.map(goal => goal.id));
   byId('combined-costs').innerHTML = unfinished.map(step => `<section class="breakdown-item"><h3>${statLabel(step.item.name)} <small>${step.current} → ${step.desired} · ${selected.has(step.item.id) ? 'Selected research' : 'Requirement'}</small></h3>${costTable([step], resources)}</section>`).join('') || '<p class="muted">No remaining costs.</p>';
   const gains = new Map();
@@ -344,13 +347,13 @@ function bind() {
     }catch(error){console.warn('Progress import failed:',error.message);byId('backup-message').textContent='This file could not be imported. Choose an exported planner progress file.';}
     event.target.value='';
   });
-  window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY || event.key===null){state=readProgress();renderTabs();renderCalculator();renderStats();optimizerUI?.render();if(byId('picker-dialog').open)renderPicker();}});
+  window.addEventListener('storage',event=>{if(event.key===STORAGE_KEY || event.key===null){state=readProgress();renderTabs();renderCalculator();renderStats();optimizerUI?.render();packUI?.render();if(byId('picker-dialog').open)renderPicker();}});
 }
 async function start(){
   try{
-    const response=await fetch('./data/research.json?v=optimizer-local-9');if(!response.ok)throw new Error('Research data could not be loaded.');
+    const response=await fetch('./data/research.json?v=pack-events-1');if(!response.ok)throw new Error('Research data could not be loaded.');
     data=await response.json();byResearch=new Map(data.research.map(item=>[item.id,item]));
-    state=readProgress();decorateStaticStatLabels(byId('help-view'));for(const button of document.querySelectorAll('[data-reference-tree], [data-boost-tree]')) button.innerHTML=statLabel(button.textContent);bind();optimizerUI=createOptimizerUI({data,getState:()=>state,commit,switchTab,resourceLabel,renderHTML});renderTabs();renderCalculator();renderStats();optimizerUI.render();save();
+    state=readProgress();decorateStaticStatLabels(byId('help-view'));for(const button of document.querySelectorAll('[data-reference-tree], [data-boost-tree]')) button.innerHTML=statLabel(button.textContent);bind();optimizerUI=createOptimizerUI({data,getState:()=>state,commit,switchTab,resourceLabel,renderHTML});packUI=createPackUI({data,getState:()=>state,commit,resourceLabel});renderTabs();renderCalculator();renderStats();optimizerUI.render();packUI.render();save();
     if(location.hash.startsWith('#tutorial'))history.replaceState(null,'',location.pathname+location.search);
   }catch(error){byId('main').innerHTML=`<section class="panel"><h1>Could not load research data</h1><p>${escapeHTML(error.message)}</p><p>Start the local server using Start App.cmd, then reopen the app.</p></section>`;}
 }

@@ -36,3 +36,13 @@
 .stat-label{display:inline-flex;align-items:center;gap:6px;max-width:100%;vertical-align:middle;min-width:0}.stat-icons{display:inline-flex;align-items:center;gap:3px;flex:none}.stat-icon{width:22px;height:22px;object-fit:contain;flex:none;filter:drop-shadow(0 1px 1px #0007)}.stat-label-text{min-width:0;overflow-wrap:anywhere}.goal-stat .stat-icon,.reference-table .stat-icon{width:19px;height:19px}.optimizer-goal-check .stat-label{gap:5px}.optimizer-step-heading .stat-label{align-items:flex-start}.march-priority-warning{padding:13px;border:1px solid #b69743;border-radius:6px;background:#302916;color:#f0ce76;font-size:12px;line-height:1.7}.march-priority-warning strong{color:#ffdc83}.help-step .stat-icon{width:19px;height:19px}@media(max-width:600px){.stat-icon{width:20px;height:20px}.stat-icons{gap:2px}.optimizer-goal-check .stat-label{gap:4px}.march-priority-warning{padding:11px}}
 
 .selected-scope-icons .stat-label-text{display:none}.selected-scope-icons .stat-icon{width:18px;height:18px}.selected-scope-icons{vertical-align:middle;margin-left:4px}
+
+#pack-results{margin-top:1rem}#pack-results th small{display:block;font-weight:normal;color:var(--muted);margin-top:.25rem}
+
+#pack-results .pack-summary-table{min-width:0;width:100%}#pack-results .pack-summary-table th:first-child{width:auto}#pack-results .pack-summary-table td{white-space:nowrap}
+
+.pack-exclude{display:flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:normal;color:var(--muted)}.pack-exclude input{width:16px;height:16px;flex-shrink:0}#pack-planner{margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--line)}
+
+.calculator-cost-table .pack-source-heading,.calculator-cost-table .pack-source-cell{text-align:center}.calculator-cost-table .pack-exclude{justify-content:center}.calculator-cost-table th:first-child{width:27%}.calculator-cost-table .pack-source-heading{width:15%;white-space:normal}@media(max-width:600px){.calculator-cost-table tbody th{grid-column:1/3;align-self:center}.calculator-cost-table tbody .pack-source-cell{grid-column:3;grid-row:1;text-align:center;align-self:center}.calculator-cost-table tbody .pack-source-cell::before{line-height:1.3}}
+
+.pack-events{padding-left:1.2rem}.pack-event{padding:.5rem 0 1rem;border-bottom:1px solid var(--line)}.pack-event h4{margin:.75rem 0;font-size:14px}.pack-event ul,.pack-event ol{padding-left:1.1rem}.pack-event li{margin:.4rem 0}.pack-event li small{display:block;color:var(--muted)}.pack-event-boost{color:var(--gold);font-size:12px}.pack-carry{display:grid;gap:.5rem}.pack-carry>div{display:flex;justify-content:space-between;gap:1rem;font-size:12px}

@@ -55,3 +55,7 @@ Optimization runs on your device using the bundled MIT-licensed HiGHS JavaScript
 Progress saves automatically in the browser's local storage, separately for each browser profile and site origin. There is no account or automatic synchronization between devices. Use **Backup → Export progress** before clearing site data or moving to another browser, device, or hosting URL. Import replaces the current profile.
 
 The calculator retains the original storage key and migrates the previous interface's saved goals, levels, Maester level, boosts, and undo history. Version 1 and 2 backups from Conquest Research Atlas and the renamed planner remain supported.
+
+## Pack planner
+
+Calculator automatically finds the minimum whole pack count across Research and Dragon Events. Mark resources **Get this elsewhere** to exclude them from required pack coverage. Contents follow the supplied event chart; Basic Research is excluded. Recommendations include per-category counts, collection events, and resource coverage. Both starting orders are considered. Event plans schedule Military 3 only in Research Events and Dragon Combat in either event, with prerequisites and resource carryover. Advanced Research adds its two 10% material reductions only within the 48-hour Research Event where its boosted pack is bought. The planner minimizes packs first, then event windows, and reports when the event-count search limit is reached. The planner assumes fresh event allowances and unchanged future pack contents; results do not spend inventory or change saved boosts.
